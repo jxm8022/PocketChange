@@ -1,6 +1,19 @@
 # PocketChange
 Repository for budget application
 
+# Firebase
+
+## Hosting
+
+Build project first:
+`npm run build`
+
+Deploy to development:
+`firebase deploy --only hosting:pocket-change-development`
+
+Deploy to production:
+`firebase deploy --only hosting:pocket-change`
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
