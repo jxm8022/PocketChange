@@ -1,0 +1,37 @@
+.analyticsOverview {
+    margin: 10px 0px;
+    width: 100%;
+    padding: 0;
+    text-align: center;
+}
+
+.analyticsOverview ul {
+    list-style-type: none;
+}
+
+.analyticsOverview li {
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    width: 35%;
+    padding: 0px 5px;
+}
+
+.analyticsOverview h3 {
+    margin: 0;
+}
+
+.analyticsOverview p {
+    margin: 10px 0px;
+    font-size: 1em;
+}
+
+/* tablets */
+@media only screen and (min-width: 600px) {}
+
+/* desktop */
+@media only screen and (min-width: 900px) {
+    .analyticsOverview li {
+        width: 25%;
+    }
+}

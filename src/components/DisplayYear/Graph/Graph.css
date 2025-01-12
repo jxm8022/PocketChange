@@ -1,0 +1,17 @@
+.apexcharts-toolbar {
+    color: var(--teal);
+}
+
+@media (prefers-color-scheme: dark) {
+    .apexcharts-tooltip {
+        background: var(--pink);
+        color: var(--teal);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .apexcharts-tooltip {
+        background: var(--teal);
+        color: var(--pink);
+    }
+}

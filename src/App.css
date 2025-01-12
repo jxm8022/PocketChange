@@ -1,0 +1,86 @@
+:root {
+  --darkteal: #213029;
+  --teal: #0e191c;
+  --green: #69995D;
+  --brown: #a57b4b;
+  --darkpink: #cf9797;
+  --pink: #f8e9e9;
+  --red: #ac1818;
+  --lightred: #e43939;
+}
+
+/* mobile */
+.scroll-top {
+  padding: 2px 7px;
+  font-size: .75em;
+  border-radius: 10px 0px 0px 0px;
+  text-decoration: none;
+  color: white;
+  background-color: grey;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+.version {
+  position: fixed;
+  bottom: 0;
+  left: 10px;
+  font-size: .75em;
+  text-decoration: none;
+}
+
+.version-body {
+  width: 75%;
+  margin-bottom: 30px;
+}
+
+.version-title {
+  text-align: left;
+}
+
+.version-info a {
+  text-decoration: none;
+  color: var(--darkpink);
+}
+
+.version-info {
+  width: 85%;
+  margin: auto;
+  padding: 10px 0 0 0;
+}
+
+.negative {
+  color: var(--lightred);
+}
+
+/* tablets */
+@media only screen and (min-width: 600px) {
+}
+
+/* desktop */
+@media only screen and (min-width: 900px) {
+  .version {
+    font-size: .5em;
+  }
+
+  .version-body {
+    width: 60%;
+  }
+
+  .version-info {
+    width: 75%;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .version {
+    color: var(--pink);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .version {
+    color: var(--teal);
+  }
+}

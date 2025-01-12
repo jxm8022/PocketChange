@@ -1,0 +1,60 @@
+/* mobile */
+.bar-group {
+    text-anchor: end;
+}
+
+.name-label {
+    font-weight: 300;
+    font-size: 1em;
+    fill: #333;
+    translate: -25px;
+}
+
+.value-label {
+    font-weight: 900;
+    font-size: 0.7em;
+    translate: -470px;
+}
+
+.bar-group rect {
+    translate: -40px 15px;
+    transform: scale(.35);
+}
+
+/* tablets */
+@media only screen and (min-width: 600px) {
+    .name-label {
+        translate: -20px;
+    }
+
+    .value-label {
+        translate: -100px;
+    }
+
+    .bar-group rect {
+        translate: -20px;
+        transform: scale(.90);
+    }
+}
+
+/* desktop */
+@media only screen and (min-width: 900px) {
+    .name-label {
+        translate: -10px;
+    }
+
+    .value-label {
+        translate: 0px;
+    }
+
+    .bar-group rect {
+        translate: -10px 0px;
+        transform: scale(1);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .name-label {
+        fill: var(--pink);
+    }
+}

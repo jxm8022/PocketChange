@@ -1,0 +1,57 @@
+/* mobile */
+.chart {
+    border-style: solid;
+    margin: 10px 10px 40px 10px;
+    padding: 10px;
+    width: 330px;
+    height: 600px;
+}
+
+#noData {
+    translate: -150px;
+    transform: scale(.8);
+}
+
+/* tablets */
+@media only screen and (min-width: 600px) {
+    .chart {
+        padding: 20px;
+        width: 700px;
+    }
+
+    #noData {
+        translate: -50px;
+        transform: scale(1);
+    }
+}
+
+/* desktop */
+@media only screen and (min-width: 900px) {
+    .chart {
+        padding: 20px;
+        width: 800px;
+    }
+
+    #noData {
+        translate: 0px;
+        transform: scale(1);
+    }
+
+    /* Fade bars when the chart is hovered */
+    .container:hover .bar-group {
+        opacity: 0.3;
+    }
+
+    /* But don't fade the hovered bar... */
+    .container .bar-group:hover {
+        opacity: 1;
+    }
+
+    .container .bar-group:hover .name-label {
+        font-weight: 400;
+    }
+
+    .container .bar-group:hover .value-label {
+        font-size: 0.8em;
+    }
+}
