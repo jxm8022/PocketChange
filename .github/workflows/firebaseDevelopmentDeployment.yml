@@ -41,7 +41,7 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
           echo "${FIREBASE_SERVICE_ACCOUNT}" > firebase-key.json
-          firebase --service-account firebase-key.json || echo "Logged in."
+          firebase login:ci --token "$(firebase login:ci)" || echo "Logged in."
 
       # Step 6: Deploy to Firebase development site
       - name: Deploy to Development Site
