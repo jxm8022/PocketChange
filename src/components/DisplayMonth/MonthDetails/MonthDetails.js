@@ -8,13 +8,20 @@ import { fetchAccountMonthStatistics, patchAccountMonthStatistics } from '../../
 import { updateAccountAPI } from '../../../api/accountAPI';
 import { CREDITACCOUNTTYPES, CREDITEXPENSETYPES, EXPENSETYPES } from '../../../resources/constants';
 import { deleteTransaction } from '../../../actions/transactionActions';
+import Loader from "../../../components/UI/Loader/Loader";
 
 const MonthDetails = () => {
     const dispatch = useDispatch();
     const [sortedTransactions, setSortedTransactions] = useState([]);
+    const [loadCount, setLoadingCount] = useState(0);
     const { userId, token } = useSelector((state) => state.user);
-    const [accounts, accountDictionary] = useLoadAccounts();
-    const transactions = useLoadTransactions();
+
+    const updateLoadingState = useCallback((isLoading) => {
+        setLoadingCount((prev) => prev + (isLoading ? 1 : -1));
+    }, [])
+
+    const [accounts, accountDictionary] = useLoadAccounts(updateLoadingState);
+    const transactions = useLoadTransactions(updateLoadingState);
 
     /* Sort transactions by date then by name */
     useEffect(() => {
@@ -82,6 +89,7 @@ const MonthDetails = () => {
 
     return (
         <>
+            <Loader isLoading={loadCount > 0} />
             <table className="table">
                 <thead>
                     <tr>

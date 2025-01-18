@@ -8,10 +8,12 @@ import { labels } from '../../resources/labels';
 
 import showHidePassword from '../../assets/images/auth/icons8-eye-90.png';
 import styled from "styled-components";
+import Loader from '../UI/Loader/Loader';
 
 const AuthForm = () => {
     const [isEmailValid, setIsEmailValid] = useState(true);
     const [isLogin, setIsLogin] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
     const dispatch = useDispatch();
@@ -23,6 +25,7 @@ const AuthForm = () => {
 
     const submitHandler = (event) => {
         event.preventDefault();
+        setIsLoading(true);
 
         const enteredEmail = emailInputRef.current.value;
         const enteredPassword = passwordInputRef.current.value;
@@ -35,7 +38,9 @@ const AuthForm = () => {
                         pathname: '/yearOverview',
                     });
                 }
-            })
+            }).finally(() => {
+                setIsLoading(false);
+            });
         } else {
             signIn(!isLogin, enteredEmail, enteredPassword).then((res) => {
                 if (res) {
@@ -44,11 +49,14 @@ const AuthForm = () => {
                         pathname: '/yearOverview',
                     });
                 }
-            })
+            }).finally(() => {
+                setIsLoading(false);
+            });
         }
     };
 
     const sendEmail = () => {
+        setIsLoading(true);
         const enteredEmail = emailInputRef.current.value;
 
         if (enteredEmail.length > 0) {
@@ -57,7 +65,9 @@ const AuthForm = () => {
                 if (res) {
                     dispatch(setMessage(`Instructions sent to ${res.email}`));
                 }
-            })
+            }).finally(() => {
+                setIsLoading(false);
+            });
         } else {
             setIsEmailValid(false);
         }
@@ -74,6 +84,7 @@ const AuthForm = () => {
 
     return (
         <AuthWrapper>
+            <Loader isLoading={isLoading} />
             <h2>{isLogin ? labels.login : labels.signUp}</h2>
             <form onSubmit={submitHandler}>
                 <div className='control'>

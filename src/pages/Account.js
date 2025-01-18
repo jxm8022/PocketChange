@@ -5,12 +5,17 @@ import UpdatePassword from "../components/Auth/UpdatePassword/UpdatePassword";
 import DataManagement from "../components/Account/DataManagement";
 import Accounts from "../components/Account/Accounts";
 import useLoadAccounts from "../utilities/customHooks/useLoadAccounts";
+import { useState } from "react";
+import Loader from "../components/UI/Loader/Loader";
 
 const Account = () => {
-    useLoadAccounts();
+    const [isLoading, setIsLoading] = useState(false);
+
+    useLoadAccounts(setIsLoading);
 
     return (
         <Template>
+            <Loader isLoading={isLoading} />
             <h1>{labels.account}</h1>
             {/*<RecurringTransactions /> temporarily disable recurring transactions*/}
             <Accounts />
