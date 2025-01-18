@@ -1,16 +1,10 @@
 import { useNavigate, useSearchParams, createSearchParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setDate } from "../../../actions/transactionActions";
 import { months, labels } from "../../../resources/labels";
-import { DATEFORMAT } from "../../../resources/constants";
-import { addTransactionAPI } from "../../../api/TransactionAPI";
-import { addTransaction } from "../../../actions/transactionActions";
-import moment from 'moment/moment';
 import './MonthSelector.css';
 
 const MonthSelector = (props) => {
-    const { userId, token } = useSelector((state) => state.user);
-    const { recurringTransactions } = useSelector((state) => state.transaction);
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -28,6 +22,7 @@ const MonthSelector = (props) => {
         });
     }
 
+    /*
     const addRecurring = () => {
         const response = window.confirm(`Do you want to add recurring transactions to ${months[month].month}?`);
         if (response) {
@@ -55,6 +50,7 @@ const MonthSelector = (props) => {
             }
         }
     }
+    */
 
     const submitForm = (e) => {
         setSearchParams(`month=${e.target.value}&year=${year}`);

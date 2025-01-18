@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { labels, months } from '../../../resources/labels';
-import { useDispatch, useSelector } from 'react-redux';
-import { categories } from "../../../resources/labels";
-import { setDate } from "../../../actions/transactionActions";
-import { TYPES } from "../../../resources/constants";
+import React from "react";
+import { useSelector } from 'react-redux';
 import styled from "styled-components";
 
-const currentDate = new Date();
-const currentMonth = currentDate.getMonth();
-
+/*
 const TypeSelector = React.forwardRef((props, ref) => {
     const { defaultValue, selectedMonth, addApply } = props;
     let filteredOptions = [...categories].filter((category) => category.id !== TYPES.RECURRING);
@@ -26,7 +20,9 @@ const TypeSelector = React.forwardRef((props, ref) => {
         </label>
     );
 })
+*/
 
+/*
 const MonthSelector = (props) => {
     const { prevMonth, prevYear, setSearchParams } = props.setSearchParams;
     const { startYear, currentYear } = useSelector((state) => state.user);
@@ -65,7 +61,9 @@ const MonthSelector = (props) => {
         </form>
     )
 }
+*/
 
+/*
 const YearSelector = (props) => {
     const dataYear = useSelector((state) => state.transaction.currentYear);
     const { activeYears } = useSelector((state) => state.statistics);
@@ -80,8 +78,10 @@ const YearSelector = (props) => {
         </form>
     )
 }
+*/
 
 // props = { type , currentMonth, currentYear, onMonthChange, onYearChange}
+/*
 const SelectorV1 = React.forwardRef((props, ref) => {
     let selector;
 
@@ -100,11 +100,12 @@ const SelectorV1 = React.forwardRef((props, ref) => {
     }
 
     return (
-        <> 
+        <>
             {selector}
         </>
     );
 })
+*/
 
 const Selector = (props) => {
     const { currentYear } = useSelector((state) => state.user);

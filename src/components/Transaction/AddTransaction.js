@@ -14,6 +14,7 @@ import { fetchAccountMonthStatistics, patchAccountMonthStatistics } from '../../
 import { updateAccount } from '../../actions/accountActions';
 import useLoadDictionary from '../../utilities/customHooks/useLoadDictionary';
 import { addDictionaryItem } from '../../actions/transactionActions';
+import Loader from '../UI/Loader/Loader';
 
 const AddTransaction = () => {
     const dispatch = useDispatch();
@@ -23,9 +24,14 @@ const AddTransaction = () => {
 
     const [isError, setIsError] = useState(false);
     const [categories, setCategories] = useState([]);
+    const [loadCount, setLoadingCount] = useState(0);
 
-    const [accounts, accountDictionary] = useLoadAccounts();
-    const dictionary = useLoadDictionary();
+    const updateLoadingState = useCallback((isLoading) => {
+        setLoadingCount((prev) => prev + (isLoading ? 1 : -1));
+    }, [])
+
+    const [accounts, accountDictionary] = useLoadAccounts(updateLoadingState);
+    const dictionary = useLoadDictionary(updateLoadingState);
 
     const accountRef = useRef();
     const categoryRef = useRef();
@@ -155,6 +161,7 @@ const AddTransaction = () => {
     return (
         <Template>
             <TransactionWrapper>
+                <Loader isLoading={loadCount > 0} />
                 <h1>{labels.addTransactionTitle}</h1>
                 <form className='transaction-input-form' onSubmit={submitForm} onFocus={() => { setIsError(false) }}>
                     <label>

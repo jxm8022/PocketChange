@@ -1,33 +1,27 @@
 import * as types from '../actions/actionTypes';
-import { accountTypes, transactionCategories } from '../resources/labels';
+import { transactionCategories } from '../resources/labels';
 
 const initialState = {
     accounts: {},
-    accountDictionary: {}, 
+    accountDictionary: {},
 }
 
-const getAccountType = (typeId) => accountTypes[typeId].type;
 const getTransactionType = (typeId) => transactionCategories[typeId].type;
 
 const getTransactionTotal = (accountTypeId, transactions) => {
     let total = 0;
 
-    if (!transactions)
-    {
+    if (!transactions) {
         return total;
     }
 
-    for (const year in transactions)
-    {
-        for (const month in transactions[year])
-        {
-            for (const transactionId in transactions[year][month])
-            {
+    for (const year in transactions) {
+        for (const month in transactions[year]) {
+            for (const transactionId in transactions[year][month]) {
                 const transaction = transactions[year][month][transactionId];
-                if (accountTypeId == 2 || accountTypeId == 'Credit') // Credit Cards
+                if (accountTypeId === 2 || accountTypeId === 'Credit') // Credit Cards
                 {
-                    switch(transaction.type)
-                    {
+                    switch (transaction.type) {
                         case 3:
                         case 'Debt Payment':
                             total -= transaction.amount;
@@ -37,10 +31,8 @@ const getTransactionTotal = (accountTypeId, transactions) => {
                             break;
                     }
                 }
-                else
-                {
-                    switch(transaction.type)
-                    {
+                else {
+                    switch (transaction.type) {
                         case 4:
                         case 'Income':
                             total += transaction.amount;
@@ -89,14 +81,14 @@ const accountsReducer = (state = initialState, action) => {
             }
             const targetYear = action.payload.date.substring(0, 4);
             const targetMonth = action.payload.date.substring(5, 7);
-            
+
             let updatedAccounts = structuredClone(state.accounts);
-            const accountIndex = updatedAccounts.findIndex(account => account.id == newTransaction.accountId);
+            const accountIndex = updatedAccounts.findIndex(account => account.id === newTransaction.accountId);
 
             if (!updatedAccounts[accountIndex].transactions) {
                 updatedAccounts[accountIndex].transactions = {};
             }
-            
+
             if (!updatedAccounts[accountIndex].transactions[targetYear]) {
                 updatedAccounts[accountIndex].transactions[targetYear] = {};
             }
