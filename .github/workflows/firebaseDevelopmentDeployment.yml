@@ -48,4 +48,4 @@ jobs:
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS=firebase-key.json
-          firebase deploy --project "${FIREBASE_PROJECT_ID}" --only hosting:net-budget-dev
+          firebase deploy --project "${FIREBASE_PROJECT_ID}" --only hosting:pocket-change-development
