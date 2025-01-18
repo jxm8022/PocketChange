@@ -3,14 +3,18 @@ name: Deploy to Firebase Development Site
 on:
   pull_request:
     types: [closed] # Trigger when a PR is closed
-  workflow_dispatch: # Allows manual triggering if needed
+  workflow_dispatch: # Allows manual triggering
 
 jobs:
   deploy:
-    if: github.event.pull_request.merged == true # Ensure the PR is merged
     runs-on: ubuntu-latest
 
     steps:
+      # Ensure the job only runs for merged PRs if triggered by `pull_request`
+      - name: Check PR merge status
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.merged != true }}
+        run: exit 1
+
       # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
@@ -21,17 +25,17 @@ jobs:
           echo "${{ secrets.ENV_FILE }}" > .env
           export $(cat .env | xargs)
 
-      # Step 2: Set up Node.js
+      # Step 3: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18 # Adjust based on your project
 
-      # Step 3: Install Firebase CLI
+      # Step 4: Install Firebase CLI
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      # Step 4: Authenticate with Firebase
+      # Step 5: Authenticate with Firebase
       - name: Authenticate with Firebase
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
@@ -39,7 +43,7 @@ jobs:
           echo "${FIREBASE_SERVICE_ACCOUNT}" > firebase-key.json
           firebase --service-account firebase-key.json || echo "Logged in."
 
-      # Step 5: Deploy to Firebase development site
+      # Step 6: Deploy to Firebase development site
       - name: Deploy to Development Site
         env:
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
