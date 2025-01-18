@@ -31,18 +31,26 @@ jobs:
         with:
           node-version: 18 # Adjust based on your project
 
-      # Step 4: Install Firebase CLI
+      # Step 4: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 5: Build the project
+      - name: Build the project
+        run: npm run build
+
+      # Step 6: Install Firebase CLI
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      # Step 5: Authenticate with Firebase
+      # Step 7: Authenticate with Firebase
       - name: Authenticate with Firebase
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
           echo "${FIREBASE_SERVICE_ACCOUNT}" > firebase-key.json
 
-      # Step 6: Deploy to Firebase development site
+      # Step 8: Deploy to Firebase development site
       - name: Deploy to Development Site
         env:
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
