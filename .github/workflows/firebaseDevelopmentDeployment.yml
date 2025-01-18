@@ -40,12 +40,12 @@ jobs:
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          echo "${FIREBASE_SERVICE_ACCOUNT}" > firebase-key.json
-          firebase login:ci --token "$(firebase login:ci)" || echo "Logged in."
+          echo "${{FIREBASE_SERVICE_ACCOUNT}}" > firebase-key.json
 
       # Step 6: Deploy to Firebase development site
       - name: Deploy to Development Site
         env:
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: |
+          export GOOGLE_APPLICATION_CREDENTIALS=firebase-key.json
           firebase deploy --project "${FIREBASE_PROJECT_ID}" --only hosting:net-budget-dev
