@@ -1,8 +1,9 @@
 import * as types from '../actions/actionTypes';
-import { sortRecurringTransactionsByDayAsc } from '../utilities/ReducerHelper';
+import { sortByDate, sortRecurringTransactionsByDayAsc, transformObject } from '../utilities/ReducerHelper';
 
 const initialState = {
-    transactions: {},
+    transactions: [],
+    filteredTransactions: [],
     dictionary: {},
     currentMonth: new Date().getMonth(),
     currentYear: new Date().getFullYear(),
@@ -22,9 +23,9 @@ const initialState = {
     ],
     recurringTransactions: [],
     graphData: {
-        income: [0,0,0,0,0,0,0,0,0,0,0,0],
-        spent: [0,0,0,0,0,0,0,0,0,0,0,0],
-        net: [0,0,0,0,0,0,0,0,0,0,0,0]
+        income: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        spent: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        net: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
 }
 
@@ -64,8 +65,13 @@ const transactionReducer = (state = initialState, action) => {
             };
         case types.LOAD_TRANSACTIONS:
             let loadTransactionsState = structuredClone(state);
-            loadTransactionsState.transactions = action.payload ?? {};
+            loadTransactionsState.transactions = transformObject(action.payload).sort(sortByDate) ?? {};
+            loadTransactionsState.filteredTransactions = transformObject(action.payload).sort(sortByDate) ?? {};
             return loadTransactionsState;
+        case types.FILTER_TRANSACTIONS:
+            let filterTransactionsState = structuredClone(state);
+            filterTransactionsState.filteredTransactions = action.payload ?? {};
+            return filterTransactionsState;
         case types.DELETE_TRANSACTION:
             let deleteTransactionsState = structuredClone(state);
             delete deleteTransactionsState.transactions[action.payload.id];
@@ -95,7 +101,7 @@ const transactionReducer = (state = initialState, action) => {
             }
         case types.ADD_DICTIONARY_ITEM:
             let addDictionaryItemState = structuredClone(state);
-            addDictionaryItemState.dictionary = {...addDictionaryItemState.dictionary, ...action.payload};
+            addDictionaryItemState.dictionary = { ...addDictionaryItemState.dictionary, ...action.payload };
             return addDictionaryItemState;
         case types.LOAD_DICTIONARY:
             let loadDictionaryState = structuredClone(state);

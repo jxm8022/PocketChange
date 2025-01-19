@@ -114,3 +114,20 @@ export const sortByAmount = (a, b) => {
     }
     return 0;
 }
+
+export const transformObject = (obj) => {
+    let clone = structuredClone(obj);
+    let transformedObj = Object.entries(clone).map(item => {
+        return {
+            id: item[0],
+            ...item[1]
+        };
+    });
+
+    return transformedObj;
+}
+
+export const sortByDate = (a, b) => {
+    const dateCompare = a.date.localeCompare(b.date);
+    return dateCompare !== 0 ? dateCompare : a.name.localeCompare(b.name);
+}
