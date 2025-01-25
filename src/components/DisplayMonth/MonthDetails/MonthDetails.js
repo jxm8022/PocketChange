@@ -1,42 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { labels, transactionCategories } from '../../../resources/labels';
-import useLoadAccounts from '../../../utilities/customHooks/useLoadAccounts';
-import useLoadTransactions from '../../../utilities/customHooks/useLoadTransactions';
 import { deleteTransactionAPI } from '../../../api/TransactionAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAccountMonthStatistics, patchAccountMonthStatistics } from '../../../api/statisticsAPI';
 import { updateAccountAPI } from '../../../api/accountAPI';
 import { CREDITACCOUNTTYPES, CREDITEXPENSETYPES, EXPENSETYPES } from '../../../resources/constants';
 import { deleteTransaction } from '../../../actions/transactionActions';
-import Loader from "../../../components/UI/Loader/Loader";
 
-const MonthDetails = () => {
-    const dispatch = useDispatch();
-    const [sortedTransactions, setSortedTransactions] = useState([]);
-    const [loadCount, setLoadingCount] = useState(0);
+const MonthDetails = ({ accountDictionary, accounts }) => {
+    const { filteredTransactions } = useSelector((state) => state.transaction);
     const { userId, token } = useSelector((state) => state.user);
-
-    const updateLoadingState = useCallback((isLoading) => {
-        setLoadingCount((prev) => prev + (isLoading ? 1 : -1));
-    }, [])
-
-    const [accounts, accountDictionary] = useLoadAccounts(updateLoadingState);
-    const transactions = useLoadTransactions(updateLoadingState);
-
-    /* Sort transactions by date then by name */
-    useEffect(() => {
-        let res = [];
-        for (let id of Object.keys(transactions)) {
-            res.push({ id, ...transactions[id] });
-        }
-
-        res.sort((a, b) => {
-            const dateCompare = a.date.localeCompare(b.date);
-            return dateCompare !== 0 ? dateCompare : a.name.localeCompare(b.name);
-        });
-
-        setSortedTransactions(res);
-    }, [transactions]);
+    const dispatch = useDispatch();
 
     const getTypeLabel = (typeId) => transactionCategories.find(c => c.id === typeId)?.type ?? 'No type found';
 
@@ -89,7 +63,6 @@ const MonthDetails = () => {
 
     return (
         <>
-            <Loader isLoading={loadCount > 0} />
             <table className="table">
                 <thead>
                     <tr>
@@ -97,7 +70,7 @@ const MonthDetails = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {sortedTransactions.length > 0 ? sortedTransactions.map((t) => (
+                    {filteredTransactions.length > 0 ? filteredTransactions.map((t) => (
                         <tr key={t.id} onClick={() => { handleDeleteTransaction(t) }}>
                             <td>{accountDictionary[t.accountId]}</td>
                             <td>{getTypeLabel(t.typeId)}</td>

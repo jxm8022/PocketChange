@@ -86,3 +86,11 @@ export const deleteAllTransactions = (payload) => {
         info: 'Delete all transactions'
     }
 }
+
+export const filterTransactions = (payload) => {
+    return {
+        type: types.FILTER_TRANSACTIONS,
+        info: 'Filter transactions',
+        payload
+    }
+}
