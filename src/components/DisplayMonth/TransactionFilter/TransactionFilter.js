@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { filterTransactions } from "../../../actions/transactionActions";
+import styled from "styled-components";
 
 const TransactionFilter = ({ accountDictionary, transactions }) => {
     const [accountFilterList, setAccountFilterList] = useState([]);
@@ -46,7 +47,7 @@ const TransactionFilter = ({ accountDictionary, transactions }) => {
     }
 
     return (
-        <div>
+        <TransactionFilterWrapper>
             <input
                 id='name'
                 type='text'
@@ -61,8 +62,39 @@ const TransactionFilter = ({ accountDictionary, transactions }) => {
                 })}
             </select>
             <button onClick={clearFilters}>Clear</button>
-        </div>
+        </TransactionFilterWrapper>
     );
 }
 
 export default TransactionFilter;
+
+const TransactionFilterWrapper = styled.div`
+    /* mobile */
+    input, select, button {
+        cursor: pointer;
+        border: none;
+        border-radius: 50px;
+        margin: 10px 5px;
+        padding: 0px 10px;
+        font: inherit;
+        font-size: .75em;
+        outline: none;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+
+    /* tablets */
+    @media only screen and (min-width: 600px) {
+    }
+
+    /* desktop */
+    @media only screen and (min-width: 900px) {
+    }
+
+    @media (prefers-color-scheme: dark) {
+    }
+
+    @media (prefers-color-scheme: light) {
+    }
+`;
