@@ -117,6 +117,11 @@ export const sortByAmount = (a, b) => {
 
 export const transformObject = (obj) => {
     let clone = structuredClone(obj);
+
+    if (!clone) {
+        return [];
+    }
+
     let transformedObj = Object.entries(clone).map(item => {
         return {
             id: item[0],

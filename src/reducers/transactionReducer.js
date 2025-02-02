@@ -65,12 +65,12 @@ const transactionReducer = (state = initialState, action) => {
             };
         case types.LOAD_TRANSACTIONS:
             let loadTransactionsState = structuredClone(state);
-            loadTransactionsState.transactions = transformObject(action.payload).sort(sortByDate) ?? {};
-            loadTransactionsState.filteredTransactions = transformObject(action.payload).sort(sortByDate) ?? {};
+            loadTransactionsState.transactions = transformObject(action.payload).sort(sortByDate);
+            loadTransactionsState.filteredTransactions = transformObject(action.payload).sort(sortByDate);
             return loadTransactionsState;
         case types.FILTER_TRANSACTIONS:
             let filterTransactionsState = structuredClone(state);
-            filterTransactionsState.filteredTransactions = action.payload ?? {};
+            filterTransactionsState.filteredTransactions = action.payload ?? [];
             return filterTransactionsState;
         case types.DELETE_TRANSACTION:
             let deleteTransactionsState = structuredClone(state);
