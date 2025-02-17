@@ -1,26 +1,23 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAuth } from '../Auth/AuthContext';
 import { useSearchParams } from 'react-router-dom';
-import moment from 'moment/moment';
-import styled from "styled-components";
-import { CREDITACCOUNTTYPES, CREDITEXPENSETYPES, DATEFORMAT, EXPENSETYPES } from '../../resources/constants';
+import { useDispatch } from 'react-redux';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { CREDITACCOUNTTYPES, DATEFORMAT } from '../../resources/constants';
 import { labels, transactionCategories } from '../../resources/labels';
 import { FormatString, GetStringLength } from '../../utilities/FormatData';
-import Template from '../UI/Template/Template';
-import { addTransactionAPI, patchTransactionDictionary } from '../../api/TransactionAPI';
-import useLoadAccounts from '../../utilities/customHooks/useLoadAccounts';
-import { updateAccountAPI } from '../../api/accountAPI';
-import { fetchAccountMonthStatistics, patchAccountMonthStatistics } from '../../api/statisticsAPI';
-import { updateAccount } from '../../actions/accountActions';
-import useLoadDictionary from '../../utilities/customHooks/useLoadDictionary';
+import { addTransactionAsync } from '../../api/transactionAPI';
 import { addDictionaryItem } from '../../actions/transactionActions';
+import useLoadAccounts from '../../utilities/customHooks/useLoadAccounts';
+import useLoadDictionary from '../../utilities/customHooks/useLoadDictionary';
+import moment from 'moment/moment';
+import styled from "styled-components";
 import Loader from '../UI/Loader/Loader';
+import Template from '../UI/Template/Template';
 
 const AddTransaction = () => {
     const dispatch = useDispatch();
+    const { user } = useAuth();
     const [searchParams] = useSearchParams();
-
-    const { userId, token } = useSelector((state) => state.user);
 
     const [isError, setIsError] = useState(false);
     const [categories, setCategories] = useState([]);
@@ -53,7 +50,7 @@ const AddTransaction = () => {
         setCategories(isCreditAccountType ? transactionCategories.filter(c => c.id !== 4) : transactionCategories);
     }
 
-    const defaultDate = moment().month(searchParams.get('month'))
+    const defaultDate = moment().month(parseInt(searchParams.get('month')) - 1)
         .startOf('month')
         .year(searchParams.get('year'))
         .format(DATEFORMAT).toString();
@@ -96,7 +93,7 @@ const AddTransaction = () => {
             return;
         }
 
-        const payload = {
+        const transaction = {
             accountId: accountRef.current.value,
             typeId: parseInt(categoryRef.current.value),
             date: moment(dateRef.current.value).format(DATEFORMAT).toString(),
@@ -104,57 +101,20 @@ const AddTransaction = () => {
             amount: parseFloat(amountRef.current.value),
         };
 
-        const response = window.confirm(`Does the following information look correct?\nTransaction Type: ${transactionCategories[payload.typeId].type}\nTransaction Date: ${payload.date}\nTransaction Name: ${payload.name}\nTransaction Amount: $${payload.amount}`);
+        const response = window.confirm(`Does the following information look correct?\nTransaction Type: ${transactionCategories[transaction.typeId].type}\nTransaction Date: ${transaction.date}\nTransaction Name: ${transaction.name}\nTransaction Amount: $${transaction.amount}`);
         if (response) {
-            await addTransaction(payload);
-            clearValues();
-        }
-    }
-
-    const isExpense = (isCreditAccountType, typeId) => isCreditAccountType ? CREDITEXPENSETYPES.includes(typeId) : EXPENSETYPES.includes(typeId);
-
-    const addTransaction = async (payload) => {
-        addTransactionAPI(userId, payload, token);
-
-        updateAccountBalance(payload.accountId, payload.amount, payload.typeId);
-
-        updateStatistics(payload.accountId, payload.date, payload.typeId, payload.amount);
-
-        addDictionary(payload.name);
-    }
-
-    const updateAccountBalance = (accountId, transactionAmount, transactionTypeId) => {
-        const isCreditAccountType = memoizedIsCreditAccount(accountId);
-        const isExpenseTransaction = isExpense(isCreditAccountType, transactionTypeId);
-        let updatedAmount = isExpenseTransaction ? -transactionAmount : transactionAmount;
-        updatedAmount = isCreditAccountType ? -updatedAmount : updatedAmount;
-        let updatePayload = { currentBalance: accounts[accountId].currentBalance + updatedAmount };
-        updateAccountAPI(userId, accountId, updatePayload, token);
-        dispatch(updateAccount({ accountId: accountId, currentBalance: updatePayload.currentBalance }));
-    }
-
-    const updateStatistics = async (accountId, transactionDate, transactionTypeId, transactionAmount) => {
-        const year = transactionDate.substring(0, 4);
-        const month = transactionDate.substring(5, 7);
-
-        const patchPayload = await fetchAccountMonthStatistics(userId, accountId, year, month, token) ?? { income: 0, expenses: 0 };
-
-        const isCreditAccountType = memoizedIsCreditAccount(accountId);
-        if (isExpense(isCreditAccountType, transactionTypeId)) {
-            patchPayload.expenses += transactionAmount;
-        } else {
-            patchPayload.income += transactionAmount;
-        }
-
-        patchAccountMonthStatistics(userId, accountId, year, month, patchPayload, token);
-    }
-
-    const addDictionary = (transactionName) => {
-        const dictionaryIndex = Object.keys(dictionary).findIndex(d => d.toLowerCase() === transactionName.toLowerCase());
-        if (dictionaryIndex === -1) {
-            let dictionaryPayload = { [transactionName]: transactionName };
-            patchTransactionDictionary(userId, dictionaryPayload, token);
-            dispatch(addDictionaryItem(dictionaryPayload));
+            updateLoadingState(true);
+            try {
+                await addTransactionAsync(user.uid, transaction);
+                dispatch(addDictionaryItem({ [transaction.name]: transaction.name }));
+            }
+            catch (ex) {
+                console.log(ex.message)
+            }
+            finally {
+                updateLoadingState(false);
+                clearValues();
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { labels } from "../../resources/labels";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAllTransactionAPI } from "../../api/TransactionAPI";
+import { deleteAllTransactionAPI } from "../../api/transactionAPI";
 import { deleteAllTransactions } from "../../actions/transactionActions";
 
 const DataManagement = () => {

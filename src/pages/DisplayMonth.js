@@ -1,12 +1,13 @@
+import { useCallback, useState } from "react";
 import { labels } from "../resources/labels";
 import MonthDetails from "../components/DisplayMonth/MonthDetails/MonthDetails";
 import MonthSelector from "../components/DisplayMonth/MonthSelector/MonthSelector";
 import Template from "../components/UI/Template/Template";
 import TransactionFilter from "../components/DisplayMonth/TransactionFilter/TransactionFilter";
-import { useCallback, useState } from "react";
 import useLoadAccounts from "../utilities/customHooks/useLoadAccounts";
 import useLoadTransactions from "../utilities/customHooks/useLoadTransactions";
 import Loader from "../components/UI/Loader/Loader";
+import useDefaultSearchParams from "../utilities/customHooks/useDefaultSearchParams";
 
 const DisplayMonth = () => {
     const [loadCount, setLoadingCount] = useState(0);
@@ -15,6 +16,7 @@ const DisplayMonth = () => {
         setLoadingCount((prev) => prev + (isLoading ? 1 : -1));
     }, [])
 
+    useDefaultSearchParams(true, true);
     const [accounts, accountDictionary] = useLoadAccounts(updateLoadingState);
     const transactions = useLoadTransactions(updateLoadingState);
 

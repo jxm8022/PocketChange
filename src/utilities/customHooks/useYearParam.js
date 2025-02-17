@@ -7,9 +7,13 @@ function useYearParam() {
     const { currentYear } = useSelector((state) => state.transaction);
 
     useEffect(() => {
+        console.log('first')
+    }, []);
+
+    useEffect(() => {
+        console.log('use year params')
         const year = searchParams.get('year');
-        if (!year)
-        {
+        if (!year) {
             setSearchParams(`year=${currentYear}`)
         }
     }, [searchParams, currentYear, setSearchParams]);

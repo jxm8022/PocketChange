@@ -4,7 +4,7 @@ import menu from '../../../../assets/images/menu/menu-rounded-100.png';
 import './CollapseSideBar.css';
 
 const CollapseSideBar = (props) => {
-    const { links } = props;
+    const { routes, handleRouteClick } = props;
     const [displayStyle, setDisplayStyle] = useState('0px');
     const [backgroundDisplay, setBackgroundDisplay] = useState('none');
 
@@ -15,19 +15,19 @@ const CollapseSideBar = (props) => {
 
     return (
         <>
-            <div onClick={openNav} style={{ display: backgroundDisplay}} className='navbar-background'></div>
+            <div onClick={openNav} style={{ display: backgroundDisplay }} className='navbar-background'></div>
             <div style={{ width: displayStyle }} className="sidebar">
-                {links.map((link) => <NavLink
-                    key={link.id}
-                    to={link.where}
-                    onClick={link.do}
+                {routes.map((route) => <NavLink
+                    key={route.id}
+                    to={route.path}
+                    onClick={() => { handleRouteClick(route) }}
                     className={
                         ({ isActive }) => {
                             return isActive ? 'side-active side-navbarLink' : 'side-navbarLink'
                         }
                     }
                 >
-                    {link.name}
+                    {route.navBarLabel}
                 </NavLink>)}
             </div>
             <img onClick={openNav} className='openSideBar' src={menu} alt='Menu button.' />

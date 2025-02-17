@@ -1,107 +1,25 @@
-export const addAccountAPI = (userId, accountPayload, token) => {
-    const addURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}/accounts.json?auth=${token}`;
-    return fetch(
-        addURL,
-        {
-            method: 'POST',
-            body: JSON.stringify(accountPayload),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                return res.json().then((data) => {
-                    throw new Error(data.error);
-                })
-            }
-        })
-        .catch((err) => {
-            alert(err.message);
-        })
-}
+import { db } from "../firebaseConfig";
+import { ref, get, set, push, update } from "firebase/database";
 
-export const fetchAccount = (userId, accountId, token) => {
-    const loadURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}/accounts/${accountId}.json?auth=${token}`;
-    return fetch(loadURL)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                return res.json().then((data) => {
-                    throw new Error(data.error);
-                });
-            }
-        })
-        .catch((err) => {
-            alert(err.message);
-        });
-}
+export const getAccountAsync = async (userId, accountId) => {
+    const accountRef = ref(db, `${userId}/accounts/${accountId}`);
+    const snapshot = await get(accountRef);
+    return snapshot.exists() ? snapshot.val() : null;
+};
 
-export const fetchAccounts = (userId, token) => {
-    const loadURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}/accounts.json?auth=${token}`;
-    return fetch(loadURL)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                return res.json().then((data) => {
-                    throw new Error(data.error);
-                });
-            }
-        })
-        .catch((err) => {
-            alert(err.message);
-        });
-}
+export const getAccountsAsync = async (userId) => {
+    const accountsRef = ref(db, `${userId}/accounts`);
+    const snapshot = await get(accountsRef);
+    return snapshot.exists() ? snapshot.val() : null;
+};
 
-export const updateAccountAPI = (userId, accountId, payload, token) => {
-    const updateURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}/accounts/${accountId}.json?auth=${token}`;
-    return fetch(
-        updateURL,
-        {
-            method: 'PATCH',
-            body: JSON.stringify(payload),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                return res.json().then((data) => {
-                    throw new Error(data.error.message);
-                })
-            }
-        })
-        .catch((err) => {
-            alert(err.message);
-        });
-}
+export const addAccountAsync = async (userId, data) => {
+    const accountRef = push(ref(db, `${userId}/accounts`));
+    await set(accountRef, data);
+    return accountRef.key;
+};
 
-export const deleteAccountAPI = (userId, transactionId, token) => {
-    const deleteURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}/debts/${transactionId}.json?auth=${token}`;
-    return fetch(
-        deleteURL,
-        {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                return res.json().then((data) => {
-                    throw new Error(data.error.message);
-                })
-            }
-        })
-        .catch((err) => {
-            alert(err.message);
-        })
-    }
+export const updateAccountAsync = async (userId, accountId, data) => {
+    const accountsRef = ref(db, `${userId}/accounts/${accountId}`);
+    await update(accountsRef, data);
+};

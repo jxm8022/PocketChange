@@ -1,21 +1,31 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTransactionDictionary } from "../../api/TransactionAPI";
+import { useAuth } from "../../components/Auth/AuthContext";
 import { loadDictionary } from "../../actions/transactionActions";
+import { getTransactionDictionaryAsync } from "../../api/transactionAPI";
 
 function useLoadDictionary(setIsLoading = () => { }) {
-    const { userId, token } = useSelector((state) => state.user);
+    const { user } = useAuth();
     const { dictionary } = useSelector((state) => state.transaction);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setIsLoading(true);
-        fetchTransactionDictionary(userId, token).then((res) => {
-            dispatch(loadDictionary(res));
-        }).finally(() => {
-            setIsLoading(false);
-        });
-    }, [dispatch, setIsLoading, userId, token]);
+        const getTransactionDictionary = async () => {
+            setIsLoading(true);
+            try {
+                const res = await getTransactionDictionaryAsync(user.uid);
+                dispatch(loadDictionary(res));
+            }
+            catch (ex) {
+                console.log(ex.message)
+            }
+            finally {
+                setIsLoading(false);
+            }
+        }
+
+        getTransactionDictionary();
+    }, [dispatch, setIsLoading, user]);
 
     return dictionary;
 }

@@ -1,25 +1,35 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTransactions } from "../../api/TransactionAPI";
-import { useSearchParams } from "react-router-dom";
+import { useAuth } from "../../components/Auth/AuthContext";
+import { getTransactionsAsync } from "../../api/transactionAPI";
 import { loadTransactions } from "../../actions/transactionActions";
+import useDefaultSearchParams from "./useDefaultSearchParams";
 
 function useLoadTransactions(setIsLoading = () => { }) {
-    const [searchParams,] = useSearchParams();
-    const { userId, token } = useSelector((state) => state.user);
+    const { user } = useAuth();
     const { transactions } = useSelector((state) => state.transaction);
     const dispatch = useDispatch();
 
+    const { searchParams } = useDefaultSearchParams();
     useEffect(() => {
-        setIsLoading(true);
-        const year = searchParams.get('year');
-        const month = (parseInt(searchParams.get('month')) + 1).toString().padStart(2, '0');
-        fetchTransactions(userId, year, month, token).then((res) => {
-            dispatch(loadTransactions(res));
-        }).finally(() => {
-            setIsLoading(false);
-        });
-    }, [dispatch, setIsLoading, userId, searchParams, token]);
+        const getTransactions = async () => {
+            setIsLoading(true);
+            try {
+                const year = searchParams.get('year');
+                const month = searchParams.get('month');
+                const res = await getTransactionsAsync(user.uid, year, month);
+                dispatch(loadTransactions(res));
+            }
+            catch (ex) {
+                console.log(ex.message)
+            }
+            finally {
+                setIsLoading(false);
+            }
+        }
+
+        getTransactions();
+    }, [dispatch, setIsLoading, user, searchParams]);
 
     return transactions;
 }

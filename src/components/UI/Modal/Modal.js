@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTransaction, deleteTransaction } from '../../../actions/transactionActions';
-import { deleteTransactionAPI, updateTransactionAPI } from '../../../api/TransactionAPI';
+import { deleteTransactionAPI, updateTransactionAPI } from '../../../api/transactionAPI';
 import { labels } from '../../../resources/labels';
 import InputForm from '../Form/InputForm';
 import './Modal.css';
@@ -16,7 +16,7 @@ const Modal = (props) => {
             case 'Update':
                 updateTransactionAPI(userId, transaction, data, token).then((res) => {
                     dispatch(updateTransaction({
-                        new: {...transaction, id: data.id},
+                        new: { ...transaction, id: data.id },
                         prev: data
                     }));
                 });

@@ -1,74 +1,43 @@
-import { useNavigate, useSearchParams, createSearchParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setDate } from "../../../actions/transactionActions";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { months, labels } from "../../../resources/labels";
+import useDefaultSearchParams from "../../../utilities/customHooks/useDefaultSearchParams";
 import './MonthSelector.css';
 
 const MonthSelector = (props) => {
-    const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const [month, setMonth] = useState(new Date().getMonth());
+    const [year, setYear] = useState(new Date().getFullYear());
 
-    const month = searchParams.get('month');
-    const year = searchParams.get('year');
+    const { searchParams, updateParams } = useDefaultSearchParams();
+
+    useEffect(() => {
+        if (searchParams.size > 0) {
+            setMonth(parseInt(searchParams.get('month')) - 1);
+            setYear(searchParams.get('year'));
+        }
+    }, [searchParams]);
 
     const createTransaction = () => {
-        navigate({
-            pathname: '/monthOverview/addTransaction',
-            search: createSearchParams({
-                month: month,
-                year: year
-            }).toString()
-        });
+        navigate(`/monthOverview/addTransaction?${searchParams.toString()}`);
     }
 
-    /*
-    const addRecurring = () => {
-        const response = window.confirm(`Do you want to add recurring transactions to ${months[month].month}?`);
-        if (response) {
-            for (let id in recurringTransactions) {
-                let transaction = recurringTransactions[id];
-                let dateString = `${parseInt(month)+1}/${1}/${year}`;
-                let daysInMonth = moment(dateString, "MM-DD-YYYY").daysInMonth();
-                let recurringDate = `${parseInt(month)+1}/${transaction.occurrenceValue && transaction.occurrenceValue < daysInMonth ? transaction.occurrenceValue : daysInMonth}/${year}`;
-    
-                let formData = {
-                    type: transaction.type,
-                    date: moment(recurringDate, "MM-DD-YYYY").format(DATEFORMAT).toString(),
-                    name: transaction.name,
-                    amount: transaction.amount,
-                };
-                
-                addTransactionAPI(userId, formData, token).then((res) => {
-                    if (res) {
-                        dispatch(addTransaction({
-                            ...formData,
-                            id: res.name
-                        }));
-                    }
-                });
-            }
-        }
-    }
-    */
-
-    const submitForm = (e) => {
-        setSearchParams(`month=${e.target.value}&year=${year}`);
-        dispatch(setDate({ month: parseInt(e.target.value) }));
+    const onMonthChange = (e) => {
+        const monthValue = parseInt(e.target.value) + 1;
+        updateParams({ month: monthValue.toString().padStart(2, "0") });
     }
 
     return (
         <>
             <h2>{months[month].month} {year}</h2>
-            <form onChange={submitForm}>
+            <form>
                 <label>{labels.month}
-                    <select className='selector' id='month' defaultValue={month}>
+                    <select className='selector' id='month' onChange={onMonthChange} value={month}>
                         {months.map((month, index) => <option key={month.abb} value={index}>{month.abb}</option>)}
                     </select>
                 </label>
             </form>
             <button className='transaction-btn' onClick={createTransaction}>{labels.addTransactionBtnLabel}</button>
-            {/*<button className='transaction-btn' onClick={addRecurring}>{labels.addRecurringTransactionBtnLabel}</button> disabled for now*/}
         </>
     );
 }

@@ -74,7 +74,8 @@ const transactionReducer = (state = initialState, action) => {
             return filterTransactionsState;
         case types.DELETE_TRANSACTION:
             let deleteTransactionsState = structuredClone(state);
-            delete deleteTransactionsState.transactions[action.payload.id];
+            deleteTransactionsState.transactions = deleteTransactionsState.transactions.filter(t => t.id !== action.payload);
+            deleteTransactionsState.filteredTransactions = deleteTransactionsState.filteredTransactions.filter(t => t.id !== action.payload);
             return deleteTransactionsState;
         case types.SET_DATE:
             const { month, year } = action.payload;

@@ -1,25 +1,34 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
-import { fetchYearStatistics } from "../../api/statisticsAPI";
+import { useAuth } from "../../components/Auth/AuthContext";
+import { getYearStatisticsAsync } from "../../api/statisticsAPI";
 import { loadStatistics } from "../../actions/statisticActions";
+import useDefaultSearchParams from "./useDefaultSearchParams";
 
 function useLoadYearStatistics(setIsLoading = () => { }) {
-    const { userId, token } = useSelector((state) => state.user);
-    const { currentYear } = useSelector((state) => state.transaction);
+    const { user } = useAuth();
     const { statistics } = useSelector((state) => state.statistics);
-    const [searchParams,] = useSearchParams();
     const dispatch = useDispatch();
 
+    const { searchParams } = useDefaultSearchParams();
     useEffect(() => {
-        setIsLoading(true);
-        const year = searchParams.get('year') ?? currentYear;
-        fetchYearStatistics(userId, year, token).then((res) => {
-            dispatch(loadStatistics(res));
-        }).finally(() => {
-            setIsLoading(false);
-        });
-    }, [dispatch, setIsLoading, userId, token, searchParams, currentYear]);
+        const getYearStatistics = async () => {
+            setIsLoading(true);
+            try {
+                const year = searchParams.get('year');
+                const res = await getYearStatisticsAsync(user.uid, year);
+                dispatch(loadStatistics(res));
+            }
+            catch (ex) {
+                console.log(ex.message)
+            }
+            finally {
+                setIsLoading(false);
+            }
+        }
+
+        getYearStatistics();
+    }, [dispatch, setIsLoading, user, searchParams]);
 
     return statistics;
 }
