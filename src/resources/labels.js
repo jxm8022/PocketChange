@@ -45,7 +45,7 @@ export const accountTypes = [
     { id: 2, type: 'Credit' },
 ];
 
-export const subscriptionOccurences = [
+export const occurences = [
     { id: 0, value: 'Monthly' },
     { id: 1, value: 'Annually' },
 ];
@@ -227,11 +227,26 @@ export const labels = {
     submit: 'Submit',
     top: 'Top',
 
+    // Recurring Payments
+    recurringPayments: 'Recurring Payments',
+
+    // Bills
+    bill: 'Bill',
+    bills: 'Bills',
+    addBillButtonLabel: 'Add bill',
+    billOccurence: 'Occurence',
+    billHeaders: [
+        { id: 0, value: 'Occurrence', property: 'occurence' },
+        { id: 1, value: 'Bill', property: 'name' },
+        { id: 2, value: 'Amount', property: 'amount' },
+        { id: 3, value: 'Date', property: 'date' },
+    ],
+
     // Subscriptions
+    subscription: 'Subscription',
     subscriptions: 'Subscriptions',
     addSubscriptionButtonLabel: 'Add subscription',
     subscriptionOccurence: 'Occurence',
-    subscription: 'Subscription',
     subscriptionHeaders: [
         { id: 0, value: 'Occurrence', property: 'occurence' },
         { id: 1, value: 'Subscription', property: 'name' },

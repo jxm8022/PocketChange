@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useAuth } from "../Auth/AuthContext";
-import { DATEFORMAT } from "../../resources/constants";
-import { labels, subscriptionOccurences } from "../../resources/labels";
-import { addSubscriptionAsync, deleteSubscriptionAsync } from "../../api/subscriptionsAPI";
-import { addSubscription, deleteSubscription } from "../../actions/subscriptionActions";
-import { GetStringLength } from "../../utilities/FormatData";
+import { useAuth } from "../../Auth/AuthContext";
+import { DATEFORMAT } from "../../../resources/constants";
+import { labels, occurences } from "../../../resources/labels";
+import { addSubscriptionAsync, deleteSubscriptionAsync } from "../../../api/subscriptionsAPI";
+import { addSubscription, deleteSubscription } from "../../../actions/subscriptionActions";
+import { GetStringLength } from "../../../utilities/FormatData";
 import moment from "moment";
 import styled from "styled-components";
-import Table from "../Common/Table";
-import Loader from "../UI/Loader/Loader";
+import Table from "../../Common/Table";
+import Loader from "../../UI/Loader/Loader";
 
 const SubscriptionDetails = () => {
     const { user } = useAuth();
     const dispatch = useDispatch();
-    const { subscriptions } = useSelector((state) => state.subscription);
+    const { subscriptions } = useSelector((state) => state.recurringPayments);
 
     const [mappedSubscriptions, setMappedSubscriptions] = useState([]);
     const [isDisplayModal, setIsDisplayModal] = useState(false);
@@ -29,7 +29,7 @@ const SubscriptionDetails = () => {
         setMappedSubscriptions(
             Object.keys(subscriptions).map((id) => {
                 var subscription = { id, ...subscriptions[id] };
-                subscription.occurence = subscriptionOccurences.find(at => at.id === subscription.occurenceId)?.value ?? 'Missing Type';
+                subscription.occurence = occurences.find(at => at.id === subscription.occurenceId)?.value ?? 'Missing Type';
                 return subscription;
             })
         );
@@ -40,7 +40,7 @@ const SubscriptionDetails = () => {
             return false;
         }
 
-        if (!(occurence in subscriptionOccurences)) {
+        if (!(occurence in occurences)) {
             return false;
         }
 
@@ -99,6 +99,7 @@ const SubscriptionDetails = () => {
     return (
         <SubscriptionsWrapper>
             <Loader isLoading={isLoading} />
+            <h2>{labels.subscriptions}</h2>
             <Table
                 headerLabels={labels.subscriptionHeaders}
                 data={mappedSubscriptions}
@@ -119,7 +120,7 @@ const SubscriptionDetails = () => {
                                 <label>
                                     <p>{labels.subscriptionOccurence}</p>
                                     <select id='type' onChange={(e) => setOccurence(e.target.value)}>
-                                        {subscriptionOccurences.map((occurence) => {
+                                        {occurences.map((occurence) => {
                                             return <option key={occurence.id} value={occurence.id}>{occurence.value}</option>
                                         })
                                         }
@@ -354,6 +355,9 @@ const ModalWrapper = styled.div`
 
 const SubscriptionsWrapper = styled.div`
     /* mobile */
+    h2 {
+        text-align: center;
+    }
 
     /* tablets */
     @media only screen and (min-width: 600px) {}

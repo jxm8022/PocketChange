@@ -5,7 +5,7 @@ import userReducer from '../reducers/userReducer';
 import statisticReducer from '../reducers/statisticReducer';
 import debtReducer from '../reducers/debtReducer';
 import accountsReducer from '../reducers/accountsReducer';
-import subscriptionReducer from '../reducers/subscriptionsReducer';
+import recurringPaymentReducer from '../reducers/recurringPaymentReducer';
 
 const store = configureStore(
     {
@@ -16,7 +16,7 @@ const store = configureStore(
             transaction: transactionReducer,
             user: userReducer,
             accounts: accountsReducer,
-            subscription: subscriptionReducer,
+            recurringPayments: recurringPaymentReducer,
         }
     }
 );
