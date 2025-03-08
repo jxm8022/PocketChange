@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { useAuth } from '../../Auth/AuthContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteTransactionAsync } from '../../../api/transactionAPI';
 import { deleteTransaction } from '../../../actions/transactionActions';
 import { labels, transactionCategories } from '../../../resources/labels';
 import Loader from '../../UI/Loader/Loader';
-import { useState } from 'react';
+import styled from "styled-components";
 
 const MonthDetails = ({ accountDictionary }) => {
     const { user } = useAuth();
@@ -32,7 +33,7 @@ const MonthDetails = ({ accountDictionary }) => {
     }
 
     return (
-        <>
+        <MonthDetailsWrapper>
             <Loader isLoading={isLoading} />
             <table className="table">
                 <thead>
@@ -52,8 +53,128 @@ const MonthDetails = ({ accountDictionary }) => {
                     )) : <tr style={{ height: '48px' }}><td> </td><td> </td><td> </td><td> </td></tr>}
                 </tbody>
             </table>
-        </>
+        </MonthDetailsWrapper>
     );
 }
 
 export default MonthDetails;
+
+const MonthDetailsWrapper = styled.div`
+    /* mobile */
+    .table {
+        border-collapse: collapse;
+        margin: 20px 0px 40px 0px;
+    }
+
+    .table th,
+    .table tr,
+    .table td {
+        padding: 5px 10px;
+        font-size: .75em;
+    }
+
+    .table img {
+        width: 15px;
+        float: right;
+    }
+
+    .table tr:hover {
+        background-color: rgba(156, 156, 156, 0.25);
+    }
+
+    /* tablets */
+    @media only screen and (min-width: 600px) {
+
+        .table th,
+        .table tr,
+        .table td {
+            padding: 10px;
+            font-size: .85em;
+        }
+
+        .table img {
+            width: 25px;
+        }
+    }
+
+    /* desktop */
+    @media only screen and (min-width: 900px) {
+
+        .table th,
+        .table tr,
+        .table td {
+            padding: 10px;
+            font-size: 1em;
+        }
+
+        .table img {
+            width: 40px;
+        }
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .table {
+            color: var(--pink);
+        }
+
+        .table th {
+            background-color: var(--pink);
+            color: var(--teal);
+        }
+
+        .table th,
+        .table tr,
+        .table td {
+            border: 1px solid var(--pink);
+        }
+
+        .alpha-asc {
+            content: url("../../../assets/images/sorting/sortAscendingAlpha_light.png");
+        }
+
+        .numeric-asc {
+            content: url("../../../assets/images/sorting/sortAscendingNumeric_light.png");
+        }
+
+        .alpha-desc {
+            content: url("../../../assets/images/sorting/sortDescendingAlpha_light.png");
+        }
+
+        .numeric-desc {
+            content: url("../../../assets/images/sorting/sortDescendingNumeric_light.png");
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        .table {
+            color: var(--teal);
+        }
+
+        .table th {
+            background-color: var(--teal);
+            color: var(--pink);
+        }
+
+        .table th,
+        .table tr,
+        .table td {
+            border: 1px solid var(--teal);
+        }
+
+        .alpha-asc {
+            content: url("../../../assets/images/sorting/sortAscendingAlpha_dark.png");
+        }
+
+        .numeric-asc {
+            content: url("../../../assets/images/sorting/sortAscendingNumeric_dark.png");
+        }
+
+        .alpha-desc {
+            content: url("../../../assets/images/sorting/sortDescendingAlpha_dark.png");
+        }
+
+        .numeric-desc {
+            content: url("../../../assets/images/sorting/sortDescendingNumeric_dark.png");
+        }
+    }
+`;
