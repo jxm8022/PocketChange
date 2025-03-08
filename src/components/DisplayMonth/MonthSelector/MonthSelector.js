@@ -44,6 +44,8 @@ const MonthSelector = (props) => {
 export default MonthSelector;
 
 const MonthSelectorWrapper = styled.div`
+    text-align: center;
+
     .transaction-btn {
         cursor: pointer;
         border: none;

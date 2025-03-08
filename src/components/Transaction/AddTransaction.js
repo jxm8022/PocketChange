@@ -160,6 +160,11 @@ const AddTransaction = () => {
                             list='transactions'
                             name='name'
                             autoComplete='on'
+                            onKeyDown={(e) => {
+                                if (e.key === ".") {
+                                    e.preventDefault();
+                                }
+                            }}
                         ></input>
                         <datalist id='transactions'>
                             {Object.keys(dictionary).map((key) => <option key={key} value={dictionary[key]} />)}
