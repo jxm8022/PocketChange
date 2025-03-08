@@ -3,14 +3,15 @@ import moment from 'moment/moment';
 import { DATEFORMAT } from "../../resources/constants";
 import { labels, accountTypes } from "../../resources/labels";
 import { useEffect, useRef, useState } from "react";
-import { addAccountAPI } from "../../api/accountAPI";
+import { addAccountAsync } from "../../api/accountAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { GetStringLength } from "../../utilities/FormatData";
 import { addAccount } from "../../actions/accountActions";
+import { useAuth } from "../Auth/AuthContext";
 
 const Accounts = () => {
+    const { user } = useAuth();
     const dispatch = useDispatch();
-    const { userId, token } = useSelector((state) => state.user);
     const { accounts } = useSelector((state) => state.accounts);
 
     const [mappedAccounts, setMappedAccounts] = useState([]);
@@ -60,7 +61,7 @@ const Accounts = () => {
         return true;
     }
 
-    const submitForm = (event) => {
+    const submitForm = async (event) => {
         event.preventDefault();
         setError(false);
 
@@ -77,10 +78,14 @@ const Accounts = () => {
             return;
         }
 
-        addAccountAPI(userId, payload, token).then(res => {
-            dispatch(addAccount({ ...payload, id: res.name }));
+        try {
+            const accountId = await addAccountAsync(user.uid, payload);
+            dispatch(addAccount({ ...payload, id: accountId }));
             setIsDisplayModal(false);
-        });
+        }
+        catch (ex) {
+            console.log(ex.message)
+        }
     }
 
     return (

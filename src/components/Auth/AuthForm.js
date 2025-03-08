@@ -1,75 +1,77 @@
-import { useState, useRef } from 'react';
+import { useAuth } from './AuthContext';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setMessage } from '../../actions/pageActions';
-import { login } from '../../actions/userActions';
-import { signIn, resetPassword } from '../../api/userAPI';
 import { labels } from '../../resources/labels';
+import { setMessage } from '../../actions/pageActions';
+import { loginUser, signUpUser, resetPassword } from '../../api/authAPI';
 
 import showHidePassword from '../../assets/images/auth/icons8-eye-90.png';
 import styled from "styled-components";
 import Loader from '../UI/Loader/Loader';
 
 const AuthForm = () => {
+    const { isLoggedIn } = useAuth();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [isEmailValid, setIsEmailValid] = useState(true);
     const [isLogin, setIsLogin] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const emailInputRef = useRef();
-    const passwordInputRef = useRef();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate("/yearOverview");
+        }
+    }, [isLoggedIn, navigate]);
 
     const switchAuthModeHandler = () => {
         setIsLogin((prevState) => !prevState);
     };
 
-    const submitHandler = (event) => {
+    const loginAsync = async (event) => {
         event.preventDefault();
+
+        if (!isEmailValid) {
+            return;
+        }
+
         setIsLoading(true);
 
-        const enteredEmail = emailInputRef.current.value;
-        const enteredPassword = passwordInputRef.current.value;
-
-        if (isLogin) {
-            signIn(!isLogin, enteredEmail, enteredPassword).then((res) => {
-                if (res) {
-                    dispatch(login(res));
-                    navigate({
-                        pathname: '/yearOverview',
-                    });
-                }
-            }).finally(() => {
-                setIsLoading(false);
-            });
-        } else {
-            signIn(!isLogin, enteredEmail, enteredPassword).then((res) => {
-                if (res) {
-                    dispatch(login(res));
-                    navigate({
-                        pathname: '/yearOverview',
-                    });
-                }
-            }).finally(() => {
-                setIsLoading(false);
-            });
+        try {
+            if (isLogin) {
+                await loginUser(email, password);
+            } else {
+                await signUpUser(email, password);
+            }
+            navigate("/yearOverview");
+        }
+        catch (ex) {
+            console.log(ex.message)
+        }
+        finally {
+            setIsLoading(false);
         }
     };
 
-    const sendEmail = () => {
-        setIsLoading(true);
-        const enteredEmail = emailInputRef.current.value;
+    const sendEmail = async () => {
+        if (!isEmailValid) {
+            return;
+        }
 
-        if (enteredEmail.length > 0) {
-            setIsEmailValid(true);
-            resetPassword(enteredEmail).then((res) => {
-                if (res) {
-                    dispatch(setMessage(`Instructions sent to ${res.email}`));
-                }
-            }).finally(() => {
-                setIsLoading(false);
-            });
-        } else {
-            setIsEmailValid(false);
+        setIsLoading(true);
+
+        try {
+            await resetPassword(email);
+            dispatch(setMessage(`Instructions sent to ${email}`));
+        }
+        catch (ex) {
+            console.log(ex.message)
+        }
+        finally {
+            setIsLoading(false);
         }
     }
 
@@ -86,10 +88,17 @@ const AuthForm = () => {
         <AuthWrapper>
             <Loader isLoading={isLoading} />
             <h2>{isLogin ? labels.login : labels.signUp}</h2>
-            <form onSubmit={submitHandler}>
+            <form onSubmit={loginAsync}>
                 <div className='control'>
                     <label htmlFor='email'>{labels.email}</label>
-                    <input type='email' id='email' required ref={emailInputRef} />
+                    <input
+                        type='email'
+                        id='email'
+                        required
+                        value={email}
+                        onChange={(e) => { setEmail(e.target.value) }}
+                        onBlur={() => { setIsEmailValid(email.includes('@')) }}
+                    />
                     {!isEmailValid ? <p className='error'>{labels.enterEmail}</p> : <></>}
                 </div>
                 <div className='control'>
@@ -99,7 +108,8 @@ const AuthForm = () => {
                             type='password'
                             id='password'
                             required
-                            ref={passwordInputRef}
+                            value={password}
+                            onChange={(e) => { setPassword(e.target.value) }}
                         />
                         <img onClick={showPassword} src={showHidePassword} alt='Hide or show password' className='showPassword' />
                     </div>

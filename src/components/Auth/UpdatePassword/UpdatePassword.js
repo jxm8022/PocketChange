@@ -2,8 +2,6 @@ import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { labels } from "../../../resources/labels";
 import { setMessage } from "../../../actions/pageActions";
-import { changePassword } from "../../../api/userAPI";
-import { login } from "../../../actions/userActions";
 import showHidePassword from '../../../assets/images/auth/icons8-eye-90.png';
 import './UpdatePassword.css';
 
@@ -15,15 +13,8 @@ const UpdatePassword = () => {
     const submitHandler = (event) => {
         event.preventDefault();
 
-        const enteredPassword = passwordInputRef.current.value;
-
         if (token) {
-            changePassword(token, enteredPassword).then((res) => {
-                if (res) {
-                    dispatch(login(res));
-                    dispatch(setMessage('Password successfully changed'));
-                }
-            });
+            dispatch(setMessage('This feature has been removed'));
         }
 
         passwordInputRef.current.value = '';

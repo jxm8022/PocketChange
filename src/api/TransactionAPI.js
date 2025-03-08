@@ -1,170 +1,97 @@
-export const fetchTransactionDictionary = async (userId, token) => {
-    const loadURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}/transactions/dictionary.json?auth=${token}`;
-    return fetch(loadURL)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                return res.json().then((data) => {
-                    throw new Error(data.error);
-                });
-            }
-        })
-        .catch((err) => {
-            alert(err.message);
-        });
-}
+import { db } from "../firebaseConfig";
+import { ref, get, push, update } from "firebase/database";
+import { getAccountAsync } from "./accountAPI";
+import { getAccountMonthStatisticsAsync } from "./statisticsAPI";
+import { CREDITACCOUNTTYPES, CREDITEXPENSETYPES, EXPENSETYPES } from "../resources/constants";
 
-export const patchTransactionDictionary = async (userId, payload, token) => {
-    const updateURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}/transactions/dictionary.json?auth=${token}`;
-    return fetch(
-        updateURL,
-        {
-            method: 'PATCH',
-            body: JSON.stringify(payload),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                return res.json().then((data) => {
-                    throw new Error(data.error.message);
-                })
-            }
-        })
-        .catch((err) => {
-            alert(err.message);
-        });
-}
+const isCreditAccount = (accountTypeId) => CREDITACCOUNTTYPES.includes(accountTypeId);
 
-export const addTransactionAPI = async (userId, payload, token) => { // date format yyyy-mm-dd
-    const year = payload.date.substring(0, 4);
-    const month = payload.date.substring(5, 7);
-    const addURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}/transactions/${year}/${month}.json?auth=${token}`;
-    return fetch(
-        addURL,
-        {
-            method: 'POST',
-            body: JSON.stringify(payload),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                return res.json().then((data) => {
-                    throw new Error(data.error);
-                })
-            }
-        })
-        .catch((err) => {
-            alert(err.message);
-        })
-}
+const isExpense = (isCreditAccountType, typeId) => isCreditAccountType ? CREDITEXPENSETYPES.includes(typeId) : EXPENSETYPES.includes(typeId);
 
-export const fetchTransactions = async (userId, year, month, token) => {
-    const loadURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}/transactions/${year}/${month}.json?auth=${token}`;
-    return fetch(loadURL)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                return res.json().then((data) => {
-                    throw new Error(data.error);
-                });
-            }
-        })
-        .catch((err) => {
-            alert(err.message);
-        });
-}
+export const getTransactionsAsync = async (userId, year, month) => {
+    const transactionsRef = ref(db, `${userId}/transactions/${year}/${month}`);
+    const snapshot = await get(transactionsRef);
+    return snapshot.exists() ? snapshot.val() : null;
+};
 
-export const loadTransactionsAPI = (userId, token) => {
-    const loadURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}.json?auth=${token}`;
-    return fetch(loadURL)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                return res.json().then((data) => {
-                    throw new Error(data.error);
-                });
-            }
-        })
-        .catch((err) => {
-            alert(err.message);
-        });
-}
+export const getTransactionDictionaryAsync = async (userId) => {
+    const transactionDictionaryRef = ref(db, `${userId}/transactions/dictionary`);
+    const snapshot = await get(transactionDictionaryRef);
+    return snapshot.exists() ? snapshot.val() : null;
+};
 
-export const deleteTransactionAPI = async (userId, transaction, token) => {
-    const transactionDate = transaction.date.split('-');
-    const deleteURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}/transactions/${transactionDate[0]}/${transactionDate[1]}/${transaction.id}.json?auth=${token}`;
-    return fetch(
-        deleteURL,
-        {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                return res.json().then((data) => {
-                    throw new Error(data.error.message);
-                })
-            }
-        })
-        .catch((err) => {
-            alert(err.message);
-        })
-}
+export const addTransactionAsync = async (userId, transaction) => {
+    const { date, accountId } = transaction;
+    const year = date.split('-')[0];
+    const month = date.split('-')[1];
 
-export const updateTransactionAPI = (userId, updatedTransaction, previousTransaction, token) => {
-    const updatedDate = updatedTransaction.date.split('-');
-    const previousDate = previousTransaction.date.split('-');
-    if (updatedDate[0] !== previousDate[0] || updatedDate[1] !== previousDate[1]) {
-        return addTransactionAPI(userId, updatedTransaction, token).then((res) => {
-            if (res) {
-                deleteTransactionAPI(userId, previousTransaction, token);
-                return res;
-            }
-        });
-    } else {
-        const updateURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}/transactions/${updatedDate[0]}/${updatedDate[1]}/${previousTransaction.id}.json?auth=${token}`;
-        return fetch(
-            updateURL,
-            {
-                method: 'PATCH',
-                body: JSON.stringify({
-                    amount: updatedTransaction.amount,
-                    date: updatedTransaction.date,
-                    name: updatedTransaction.name,
-                    type: updatedTransaction.type
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then((res) => {
-                if (res.ok) {
-                    return res.json();
-                } else {
-                    return res.json().then((data) => {
-                        throw new Error(data.error.message);
-                    })
-                }
-            })
-            .catch((err) => {
-                alert(err.message);
-            })
+    const transactionRef = push(ref(db, `${userId}/transactions/${year}/${month}`));
+
+    const updates = {};
+    updates[`${userId}/transactions/${year}/${month}/${transactionRef.key}`] = transaction;
+    updates[`${userId}/accounts/${accountId}/currentBalance`] = await getAccountBalanceAsync(userId, transaction);
+    updates[`${userId}/statistics/${year}/${month}/${accountId}`] = await getAccountStatisticsAsync(userId, year, month, transaction);
+    updates[`${userId}/transactions/dictionary/${transaction.name}`] = transaction.name;
+
+    await update(ref(db), updates);
+
+    return transactionRef.key;
+};
+
+export const deleteTransactionAsync = async (userId, transaction) => {
+    const { date, accountId } = transaction;
+    const year = date.split('-')[0];
+    const month = date.split('-')[1];
+
+    const updates = {};
+    updates[`${userId}/transactions/${year}/${month}/${transaction.id}`] = null;
+    updates[`${userId}/accounts/${accountId}/currentBalance`] = await getAccountBalanceAsync(userId, transaction, true);
+    updates[`${userId}/statistics/${year}/${month}/${accountId}`] = await getAccountStatisticsAsync(userId, year, month, transaction, true);
+
+    await update(ref(db), updates);
+};
+
+const getAccountBalanceAsync = async (userId, transaction, isDelete = false) => {
+    const { accountId, amount, typeId } = transaction;
+
+    const account = await getAccountAsync(userId, accountId);
+    if (!account || account.currentBalance === undefined || account.typeId === undefined) {
+        throw new Error('Invalid account data');
     }
+
+    const isCredit = isCreditAccount(account.typeId);
+    const isExpenseTx = isExpense(isCredit, typeId);
+
+    const adjustment = isCredit ? (isExpenseTx ? -amount : amount) : (isExpenseTx ? amount : -amount);
+
+    return isDelete ? (account.currentBalance + adjustment) : (account.currentBalance - adjustment);
+}
+
+const getAccountStatisticsAsync = async (userId, year, month, transaction, isDelete = false) => {
+    const { accountId, amount, typeId } = transaction;
+
+    const account = await getAccountAsync(userId, accountId);
+    if (!account || account.typeId === undefined) {
+        throw new Error('Invalid account data');
+    }
+
+    let accountMonthStatistics = await getAccountMonthStatisticsAsync(userId, accountId, year, month);
+    if (!accountMonthStatistics) {
+        accountMonthStatistics = { expenses: 0, income: 0 }
+    }
+
+    const isCredit = isCreditAccount(account.typeId);
+    const isExpenseTx = isExpense(isCredit, typeId);
+
+    const adjustment = isDelete ? amount : -amount;
+
+    if (isExpenseTx) {
+        accountMonthStatistics.expenses -= adjustment;
+    } else {
+        accountMonthStatistics.income -= adjustment;
+    }
+
+    return accountMonthStatistics;
 }
 
 export const deleteAllTransactionAPI = (userId, token) => {

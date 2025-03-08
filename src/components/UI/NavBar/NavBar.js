@@ -1,18 +1,30 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { logout } from '../../../actions/userActions';
-import { labels } from '../../../resources/labels';
-import CollapseSideBar from './CollapseSideBar/CollapseSideBar';
-import './NavBar.css';
 import { useCallback, useEffect, useState } from 'react';
+import { labels } from '../../../resources/labels';
+import { useAuth } from '../../Auth/AuthContext';
+import { logoutUser } from '../../../api/authAPI';
+import CollapseSideBar from './CollapseSideBar/CollapseSideBar';
+import routes from '../../../routes';
+import './NavBar.css';
 
 const NavBar = () => {
+    const { isLoggedIn } = useAuth();
     const { currentMonth, currentYear } = useSelector((state) => state.transaction);
-    const { isLoggedIn } = useSelector((state) => state.user);
     const [show, setShow] = useState(true);
+    const [navRoutes, setNavRoutes] = useState([]);
     const [lastScrollY, setLastScrollY] = useState(0);
-    const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        let filteredRoutes = routes.filter(route => route.navBarLabel && route.isDisplayed !== false);
+
+        if (!isLoggedIn) {
+            filteredRoutes = filteredRoutes.filter(route => !route.isProtected && route.navBarLabel !== labels.logout);
+        }
+
+        setNavRoutes(filteredRoutes);
+    }, [isLoggedIn]);
 
     const controlNavbar = useCallback(() => {
         if (typeof window !== 'undefined') {
@@ -24,7 +36,7 @@ const NavBar = () => {
 
             setLastScrollY(window.scrollY);
         }
-    },[]);
+    }, []);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -36,11 +48,14 @@ const NavBar = () => {
         }
     }, [lastScrollY, controlNavbar]);
 
-    const handleLogout = () => {
-        dispatch(logout());
-        navigate({
-            pathname: '/auth',
-        });
+    const handleRouteClick = async (route) => {
+        switch (route.navBarLabel) {
+            case labels.logout:
+                await logoutUser();
+                break;
+            default:
+                break;
+        }
     }
 
     const handleLogo = () => {
@@ -49,66 +64,21 @@ const NavBar = () => {
         });
     }
 
-    let links = [];
-    if (isLoggedIn) {
-        links = [
-            {
-                id: 0,
-                where: `../yearOverview?year=${currentYear}`,
-                name: labels.home
-            },
-            {
-                id: 1,
-                where: '../account',
-                name: labels.account
-            },
-            {
-                id: 2,
-                where: `../monthOverview?month=${currentMonth}&year=${currentYear}`,
-                name: labels.monthOverview
-            },/*
-            {
-                id: 3,
-                where: `../statistics`,
-                name: labels.statistics
-            },*/
-            {
-                id: 5,
-                where: `../about`,
-                name: labels.about
-            },
-            {
-                id: 6,
-                where: `../auth`,
-                name: labels.logout,
-                do: handleLogout
-            }
-        ]
-    } else {
-        links = [
-            {
-                id: 7,
-                where: `../about`,
-                name: labels.about
-            }
-        ]
-    }
-
     return (
         <nav className={show ? 'navbar fade-in' : 'navbar fade-out'}>
             <h2 onClick={handleLogo}>{labels.websiteName}</h2>
             <ul className='nav-list'>
-                {links.map((link) => <li key={link.id}>
+                {navRoutes.map((route) => <li key={route.id}>
                     <NavLink
-                        to={link.where}
-                        onClick={link.do}
+                        to={route.path}
+                        onClick={() => { handleRouteClick(route) }}
                         className={
                             ({ isActive }) => {
                                 return isActive ? 'active navbarLink' : 'navbarLink'
                             }
                         }
                     >
-                        {link.name}
+                        {route.navBarLabel}
                     </NavLink>
                 </li>
                 )}
@@ -116,7 +86,8 @@ const NavBar = () => {
             <CollapseSideBar
                 currentMonth={currentMonth}
                 currentYear={currentYear}
-                links={links}
+                routes={navRoutes}
+                handleRouteClick={handleRouteClick}
             />
         </nav >
     );

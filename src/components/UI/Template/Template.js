@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import versionHistory from "../../../assets/versionHistory";
 import NavBar from "../NavBar/NavBar";
 import Notification from "../Notification/Notification";
 import styled from "styled-components";
 
 const Template = (props) => {
+    const navigate = useNavigate();
     const latestVersion = versionHistory[versionHistory.length - 1].version;
 
     return (
@@ -12,7 +14,7 @@ const Template = (props) => {
             <Notification />
             <div className='children' style={{ paddingBottom: props.paddingBottom }}>
                 {props.children}
-                <a href='version' className='version'>v{latestVersion}</a>
+                <span className='version' onClick={() => navigate('/version')}>v{latestVersion}</span>
             </div>
         </TemplateWrapper>
     );

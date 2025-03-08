@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { filterTransactions } from "../../../actions/transactionActions";
 import styled from "styled-components";
+import Selector from "../../UI/Selector/Selector";
 
 const TransactionFilter = ({ accountDictionary, transactions }) => {
     const [accountFilterList, setAccountFilterList] = useState([]);
@@ -11,9 +12,9 @@ const TransactionFilter = ({ accountDictionary, transactions }) => {
 
     /* Build account list for dropdown account filter */
     useEffect(() => {
-        let acntFilterList = [{ key: 'none', value: '-Account Filter-' }];
+        let acntFilterList = [{ id: 'none', value: '-Account Filter-' }];
         for (let id of Object.keys(accountDictionary)) {
-            acntFilterList.push({ key: id, value: accountDictionary[id] });
+            acntFilterList.push({ id: id, value: accountDictionary[id] });
         }
         setAccountFilterList(acntFilterList);
     }, [accountDictionary]);
@@ -56,11 +57,11 @@ const TransactionFilter = ({ accountDictionary, transactions }) => {
                 value={searchInput}
                 onChange={handleSearchInput}
             ></input>
-            <select onChange={handleAccountFilter} value={accountFilter}>
-                {accountFilterList?.length > 0 && accountFilterList.map((account) => {
-                    return <option key={account.key} value={account.key}>{account.value}</option>
-                })}
-            </select>
+            <Selector
+                className='filterSelector'
+                value={accountFilter}
+                onChange={handleAccountFilter}
+                options={accountFilterList} />
             <button onClick={clearFilters}>Clear</button>
         </TransactionFilterWrapper>
     );
@@ -69,8 +70,12 @@ const TransactionFilter = ({ accountDictionary, transactions }) => {
 export default TransactionFilter;
 
 const TransactionFilterWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
     /* mobile */
-    input, select, button {
+    input, .filterSelector, button {
         cursor: pointer;
         border: none;
         border-radius: 50px;
