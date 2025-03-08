@@ -1,93 +1,110 @@
-import styled from "styled-components";
-import moment from 'moment/moment';
-import { DATEFORMAT } from "../../resources/constants";
-import { labels, accountTypes } from "../../resources/labels";
-import { useEffect, useRef, useState } from "react";
-import { addAccountAsync } from "../../api/accountAPI";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { GetStringLength } from "../../utilities/FormatData";
-import { addAccount } from "../../actions/accountActions";
 import { useAuth } from "../Auth/AuthContext";
+import { DATEFORMAT } from "../../resources/constants";
+import { labels, subscriptionOccurences } from "../../resources/labels";
+import { addSubscriptionAsync, deleteSubscriptionAsync } from "../../api/subscriptionsAPI";
+import { addSubscription, deleteSubscription } from "../../actions/subscriptionActions";
+import { GetStringLength } from "../../utilities/FormatData";
+import moment from "moment";
+import styled from "styled-components";
 import Table from "../Common/Table";
+import Loader from "../UI/Loader/Loader";
 
-const Accounts = () => {
+const SubscriptionDetails = () => {
     const { user } = useAuth();
     const dispatch = useDispatch();
-    const { accounts } = useSelector((state) => state.accounts);
+    const { subscriptions } = useSelector((state) => state.subscription);
 
-    const [mappedAccounts, setMappedAccounts] = useState([]);
+    const [mappedSubscriptions, setMappedSubscriptions] = useState([]);
     const [isDisplayModal, setIsDisplayModal] = useState(false);
-    const [error, setError] = useState(false);
+    const [occurence, setOccurence] = useState(0);
+    const [subscription, setSubscription] = useState('');
+    const [amount, setAmmount] = useState('');
+    const [date, setDate] = useState(moment().format(DATEFORMAT).toString());
+    const [error, setError] = useState();
+    const [isLoading, setIsLoading] = useState(false);
 
-    /* Build account array */
     useEffect(() => {
-        setMappedAccounts(
-            Object.keys(accounts).map((id) => {
-                var account = { id, ...accounts[id] };
-                account.type = accountTypes.find(at => at.id === account.typeId)?.type ?? 'Missing Type';
-                return account;
+        setMappedSubscriptions(
+            Object.keys(subscriptions).map((id) => {
+                var subscription = { id, ...subscriptions[id] };
+                subscription.occurence = subscriptionOccurences.find(at => at.id === subscription.occurenceId)?.value ?? 'Missing Type';
+                return subscription;
             })
-        )
-    }, [accounts]);
+        );
+    }, [subscriptions]);
 
-    const transType = useRef();
-    const transDate = useRef();
-    const transName = useRef();
-    const transAmount = useRef();
-
-    const validForm = () => {
-        if (GetStringLength(transName.current.value) === 0) {
+    const validateForm = () => {
+        if (GetStringLength(subscription) === 0) {
             return false;
         }
 
-        if (GetStringLength(transType.current.value) === 0) {
+        if (!(occurence in subscriptionOccurences)) {
             return false;
         }
 
-        if (GetStringLength(transDate.current.value) === 0) {
+        if (GetStringLength(amount) === 0) {
             return false;
         }
 
-        if (GetStringLength(transAmount.current.value) === 0) {
+        if (GetStringLength(date) === 0) {
             return false;
         }
         return true;
     }
 
-    const submitForm = async (event) => {
-        event.preventDefault();
+    const submitForm = async (e) => {
+        e.preventDefault();
         setError(false);
 
-        const payload = {
-            name: transName.current.value,
-            typeId: parseInt(transType.current.value),
-            date: transDate.current.value,
-            initialBalance: parseFloat(transAmount.current.value),
-            currentBalance: parseFloat(transAmount.current.value),
-        }
+        const isValid = validateForm();
 
-        if (!validForm()) {
-            setError(true)
+        if (!isValid) {
+            setError(true);
             return;
         }
 
+        const payload = {
+            name: subscription,
+            occurenceId: parseInt(occurence),
+            amount: parseFloat(amount),
+            date: date,
+        }
+
         try {
-            const accountId = await addAccountAsync(user.uid, payload);
-            dispatch(addAccount({ ...payload, id: accountId }));
+            const subscriptionId = await addSubscriptionAsync(user.uid, payload);
+            dispatch(addSubscription({ ...payload, id: subscriptionId }));
             setIsDisplayModal(false);
+        }
+        catch (ex) {
+            console.log(ex.message);
+        }
+    }
+
+    const handleDelete = async (subscriptionId) => {
+        setIsLoading(true);
+        try {
+            await deleteSubscriptionAsync(user.uid, subscriptionId);
+            dispatch(deleteSubscription(subscriptionId));
         }
         catch (ex) {
             console.log(ex.message)
         }
+        finally {
+            setIsLoading(false);
+        }
     }
 
     return (
-        <AccountsWrapper>
+        <SubscriptionsWrapper>
+            <Loader isLoading={isLoading} />
             <Table
-                headerLabels={labels.accountsHeaders}
-                data={mappedAccounts}
-                addItemLabel={labels.addAccountButtonLabel}
+                headerLabels={labels.subscriptionHeaders}
+                data={mappedSubscriptions}
+                addItemLabel={labels.addSubscriptionButtonLabel}
                 setDisplayModal={setIsDisplayModal}
+                handleDelete={handleDelete}
             />
             {isDisplayModal && <ModalWrapper>
                 <div className='modal-background'></div>
@@ -100,19 +117,19 @@ const Accounts = () => {
                         <div className='modal-body'>
                             <form className='transaction-input-form' onSubmit={submitForm} onFocus={() => { setError() }}>
                                 <label>
-                                    <p>{labels.accountType}</p>
-                                    <select id='type' ref={transType} defaultValue={0}>
-                                        {accountTypes.map((category, index) => {
-                                            return <option key={category.id} value={index}>{category.type}</option>
+                                    <p>{labels.subscriptionOccurence}</p>
+                                    <select id='type' onChange={(e) => setOccurence(e.target.value)}>
+                                        {subscriptionOccurences.map((occurence) => {
+                                            return <option key={occurence.id} value={occurence.id}>{occurence.value}</option>
                                         })
                                         }
                                     </select>
                                 </label>
                                 <label>
-                                    <p>{labels.accountAccount}</p>
+                                    <p>{labels.subscription}</p>
                                     <input
                                         id='name'
-                                        ref={transName}
+                                        onChange={(e) => setSubscription(e.target.value)}
                                         type='text'
                                         placeholder='Account Name'
                                         list='transactions'
@@ -124,7 +141,7 @@ const Accounts = () => {
                                     <p>{labels.accountAmount}</p>
                                     <input
                                         id='amount'
-                                        ref={transAmount}
+                                        onChange={(e) => setAmmount(e.target.value)}
                                         type='number'
                                         step='0.01'
                                         placeholder='$0.00'
@@ -135,7 +152,7 @@ const Accounts = () => {
                                     <p>{labels.accountDate}</p>
                                     <input
                                         id='date'
-                                        ref={transDate}
+                                        onChange={(e) => setDate(e.target.value)}
                                         type='date'
                                         defaultValue={moment().format(DATEFORMAT).toString()}
                                     ></input>
@@ -149,11 +166,11 @@ const Accounts = () => {
                     </div>
                 </div>
             </ModalWrapper>}
-        </AccountsWrapper>
+        </SubscriptionsWrapper>
     );
 }
 
-export default Accounts;
+export default SubscriptionDetails;
 
 const ModalWrapper = styled.div`
     /* mobile */
@@ -335,7 +352,7 @@ const ModalWrapper = styled.div`
     }
 `;
 
-const AccountsWrapper = styled.div`
+const SubscriptionsWrapper = styled.div`
     /* mobile */
 
     /* tablets */

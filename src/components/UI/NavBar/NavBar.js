@@ -5,7 +5,7 @@ import { labels } from '../../../resources/labels';
 import { useAuth } from '../../Auth/AuthContext';
 import { logoutUser } from '../../../api/authAPI';
 import CollapseSideBar from './CollapseSideBar/CollapseSideBar';
-import routes from '../../../routes';
+import routes, { sortRoute } from '../../../routes';
 import './NavBar.css';
 
 const NavBar = () => {
@@ -17,7 +17,7 @@ const NavBar = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        let filteredRoutes = routes.filter(route => route.navBarLabel && route.isDisplayed !== false);
+        let filteredRoutes = routes.filter(route => route.navBarLabel && route.isDisplayed !== false).sort(sortRoute);
 
         if (!isLoggedIn) {
             filteredRoutes = filteredRoutes.filter(route => !route.isProtected && route.navBarLabel !== labels.logout);
