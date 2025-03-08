@@ -6,7 +6,7 @@ import About from './pages/About';
 import Version from './pages/Version';
 import Account from './pages/Account';
 import Statistics from './pages/Statistics';
-import DisplayMonth from './pages/DisplayMonth';
+import MonthOverview from './pages/MonthOverview';
 import AddTransaction from './components/Transaction/AddTransaction';
 import { labels } from './resources/labels';
 
@@ -29,7 +29,7 @@ const routes = [
     {
         id: 2,
         path: '/monthOverview',
-        component: <DisplayMonth />,
+        component: <MonthOverview />,
         isProtected: true,
         navBarLabel: labels.monthOverview
     },
@@ -44,7 +44,8 @@ const routes = [
         path: '/statistics',
         component: <Statistics />,
         isProtected: true,
-        navBarLabel: labels.statistics
+        navBarLabel: labels.statistics,
+        isDisplayed: false
     },
     {
         id: 5,

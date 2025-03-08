@@ -20,18 +20,18 @@ export const transactionCategories = [
 ];
 
 export const months = [
-    { id: 0, month: 'January', abb: 'Jan' },
-    { id: 1, month: 'February', abb: 'Feb' },
-    { id: 2, month: 'March', abb: 'Mar' },
-    { id: 3, month: 'April', abb: 'Apr' },
-    { id: 4, month: 'May', abb: 'May' },
-    { id: 5, month: 'June', abb: 'Jun' },
-    { id: 6, month: 'July', abb: 'Jul' },
-    { id: 7, month: 'August', abb: 'Aug' },
-    { id: 8, month: 'September', abb: 'Sep' },
-    { id: 9, month: 'October', abb: 'Oct' },
-    { id: 10, month: 'November', abb: 'Nov' },
-    { id: 11, month: 'December', abb: 'Dec' },
+    { id: 0, month: 'January', value: 'Jan' },
+    { id: 1, month: 'February', value: 'Feb' },
+    { id: 2, month: 'March', value: 'Mar' },
+    { id: 3, month: 'April', value: 'Apr' },
+    { id: 4, month: 'May', value: 'May' },
+    { id: 5, month: 'June', value: 'Jun' },
+    { id: 6, month: 'July', value: 'Jul' },
+    { id: 7, month: 'August', value: 'Aug' },
+    { id: 8, month: 'September', value: 'Sep' },
+    { id: 9, month: 'October', value: 'Oct' },
+    { id: 10, month: 'November', value: 'Nov' },
+    { id: 11, month: 'December', value: 'Dec' },
 ];
 
 export const occurrenceTypes = [

@@ -94,69 +94,6 @@ const getAccountStatisticsAsync = async (userId, year, month, transaction, isDel
     return accountMonthStatistics;
 }
 
-export const deleteTransactionAPI = async (userId, transaction, token) => {
-    const transactionDate = transaction.date.split('-');
-    const deleteURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}/transactions/${transactionDate[0]}/${transactionDate[1]}/${transaction.id}.json?auth=${token}`;
-    return fetch(
-        deleteURL,
-        {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                return res.json().then((data) => {
-                    throw new Error(data.error.message);
-                })
-            }
-        })
-        .catch((err) => {
-            alert(err.message);
-        })
-}
-
-export const updateTransactionAPI = async (userId, updatedTransaction, previousTransaction, token) => {
-    const updatedDate = updatedTransaction.date.split('-');
-    const previousDate = previousTransaction.date.split('-');
-    if (updatedDate[0] !== previousDate[0] || updatedDate[1] !== previousDate[1]) {
-        const transactionId = await addTransactionAsync(userId, updatedTransaction);
-        deleteTransactionAPI(userId, previousTransaction, token);
-        return transactionId;
-    } else {
-        const updateURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}/transactions/${updatedDate[0]}/${updatedDate[1]}/${previousTransaction.id}.json?auth=${token}`;
-        return fetch(
-            updateURL,
-            {
-                method: 'PATCH',
-                body: JSON.stringify({
-                    amount: updatedTransaction.amount,
-                    date: updatedTransaction.date,
-                    name: updatedTransaction.name,
-                    type: updatedTransaction.type
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then((res) => {
-                if (res.ok) {
-                    return res.json();
-                } else {
-                    return res.json().then((data) => {
-                        throw new Error(data.error.message);
-                    })
-                }
-            })
-            .catch((err) => {
-                alert(err.message);
-            })
-    }
-}
-
 export const deleteAllTransactionAPI = (userId, token) => {
     const deleteURL = `${process.env.REACT_APP_FIREBASE_DATABASE_URL}/${userId}.json?auth=${token}`;
     return fetch(

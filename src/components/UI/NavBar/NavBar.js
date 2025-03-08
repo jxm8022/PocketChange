@@ -17,7 +17,7 @@ const NavBar = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        let filteredRoutes = routes.filter(route => route.navBarLabel);
+        let filteredRoutes = routes.filter(route => route.navBarLabel && route.isDisplayed !== false);
 
         if (!isLoggedIn) {
             filteredRoutes = filteredRoutes.filter(route => !route.isProtected && route.navBarLabel !== labels.logout);

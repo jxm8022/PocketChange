@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { months, labels } from "../../../resources/labels";
 import useDefaultSearchParams from "../../../utilities/customHooks/useDefaultSearchParams";
-import './MonthSelector.css';
+import Selector from "../../UI/Selector/Selector";
+import styled from "styled-components";
 
 const MonthSelector = (props) => {
     const navigate = useNavigate();
@@ -28,18 +29,59 @@ const MonthSelector = (props) => {
     }
 
     return (
-        <>
+        <MonthSelectorWrapper>
             <h2>{months[month].month} {year}</h2>
-            <form>
-                <label>{labels.month}
-                    <select className='selector' id='month' onChange={onMonthChange} value={month}>
-                        {months.map((month, index) => <option key={month.abb} value={index}>{month.abb}</option>)}
-                    </select>
-                </label>
-            </form>
+            <Selector
+                label={labels.month}
+                value={month}
+                onChange={onMonthChange}
+                options={months} />
             <button className='transaction-btn' onClick={createTransaction}>{labels.addTransactionBtnLabel}</button>
-        </>
+        </MonthSelectorWrapper>
     );
 }
 
 export default MonthSelector;
+
+const MonthSelectorWrapper = styled.div`
+    .transaction-btn {
+        cursor: pointer;
+        border: none;
+        border-radius: 50px;
+        margin: 10px 0px;
+        padding: 10px 20px;
+        font: inherit;
+    }
+
+    /* tablets */
+    @media only screen and (min-width: 600px) {}
+
+    /* desktop */
+    @media only screen and (min-width: 900px) {}
+
+    @media (prefers-color-scheme: dark) {
+        .selector {
+            border: 1px solid var(--pink);
+            background-color: var(--teal);
+            color: var(--pink);
+        }
+        
+        .transaction-btn {
+            background-color: var(--pink);
+            color: var(--teal);
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        .selector {
+            border: 1px solid var(--teal);
+            background-color: var(--pink);
+            color: var(--teal);
+        }
+        
+        .transaction-btn {
+            background-color: var(--teal);
+            color: var(--pink);
+        }
+    }
+`;

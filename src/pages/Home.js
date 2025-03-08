@@ -12,6 +12,11 @@ import useLoadYearStatistics from "../utilities/customHooks/useLoadYearStatistic
 const Home = () => {
     const [loadCount, setLoadingCount] = useState(0);
 
+    const yearOptions = Array.from({ length: 11 }, (_, i) => {
+        const year = new Date().getFullYear() - 10 + i + 1;
+        return { id: year, value: year };
+    });
+
     const updateLoadingState = useCallback((isLoading) => {
         setLoadingCount((prev) => prev + (isLoading ? 1 : -1));
     }, [])
@@ -29,7 +34,11 @@ const Home = () => {
             <Loader isLoading={loadCount > 0} />
             <h1>{labels.home}</h1>
             <h2>Summary</h2>
-            <Selector label={labels.year} value={searchParams.get('year')} onChange={onYearChange} />
+            <Selector
+                label={labels.year}
+                value={searchParams.get('year')}
+                onChange={onYearChange}
+                options={yearOptions} />
             <AccountSummary accounts={accounts} />
             <NetSummary statistics={statistics} />
         </Template>
