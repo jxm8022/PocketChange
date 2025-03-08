@@ -42,6 +42,21 @@ const versionHistory = [
             }
         ]
     },
+    {
+        id: 1,
+        version: 1.1,
+        title: 'Introduce new features',
+        info: [
+            {
+                id: 0,
+                title: 'Subscription management.',
+            },
+            {
+                id: 1,
+                title: 'Enhancements.',
+            },
+        ]
+    },
 ]
 
 export default versionHistory;

@@ -43,7 +43,12 @@ export const accountTypes = [
     { id: 0, type: 'Checking' },
     { id: 1, type: 'Savings' },
     { id: 2, type: 'Credit' },
-]
+];
+
+export const subscriptionOccurences = [
+    { id: 0, value: 'Monthly' },
+    { id: 1, value: 'Annually' },
+];
 
 export const labels = {
     // Application name
@@ -197,10 +202,10 @@ export const labels = {
     addAccountButtonLabel: 'Add account',
     accountTableHeader: 'Accounts',
     accountsHeaders: [
-        'Account',
-        'Type',
-        'Initial Balance',
-        'Date',
+        { id: 0, value: 'Account', property: 'name' },
+        { id: 1, value: 'Type', property: 'type' },
+        { id: 2, value: 'Initial Balance', property: 'initialBalance' },
+        { id: 3, value: 'Date', property: 'date' },
     ],
 
     // Not found page
@@ -221,4 +226,16 @@ export const labels = {
     error: 'Error!',
     submit: 'Submit',
     top: 'Top',
+
+    // Subscriptions
+    subscriptions: 'Subscriptions',
+    addSubscriptionButtonLabel: 'Add subscription',
+    subscriptionOccurence: 'Occurence',
+    subscription: 'Subscription',
+    subscriptionHeaders: [
+        { id: 0, value: 'Occurrence', property: 'occurence' },
+        { id: 1, value: 'Subscription', property: 'name' },
+        { id: 2, value: 'Amount', property: 'amount' },
+        { id: 3, value: 'Date', property: 'date' },
+    ],
 };
