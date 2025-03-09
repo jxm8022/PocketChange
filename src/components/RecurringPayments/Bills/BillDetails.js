@@ -18,6 +18,7 @@ const BillDetails = () => {
     const dispatch = useDispatch();
     const { bills } = useSelector((state) => state.recurringPayments);
 
+    const [total, setTotal] = useState(0);
     const [mappedBills, setMappedBills] = useState([]);
     const [isDisplayModal, setIsDisplayModal] = useState(false);
     const [occurence, setOccurence] = useState(0);
@@ -28,6 +29,7 @@ const BillDetails = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        setTotal(Object.values(bills).reduce((prev, curr) => prev + curr.amount, 0));
         setMappedBills(
             Object.keys(bills).map((id) => {
                 var bill = { id, ...bills[id] };
@@ -147,6 +149,7 @@ const BillDetails = () => {
                 setDisplayModal={setIsDisplayModal}
                 handleDelete={handleDelete}
             />
+            <p className="summary">Total: ${total.toFixed(2)}</p>
             <Modal
                 isDisplayModal={isDisplayModal}
                 title={labels.addBillTitle}
@@ -169,6 +172,10 @@ export default BillDetails;
 const BillsWrapper = styled.div`
     /* mobile */
     h2 {
+        text-align: center;
+    }
+
+    .summary {
         text-align: center;
     }
 
