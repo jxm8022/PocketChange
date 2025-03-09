@@ -30,8 +30,8 @@ const SubscriptionDetails = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        setMonthlyCost(Object.values(subscriptions).reduce((prev, curr) => prev + (curr.occurenceId == 0 ? curr.amount : (curr.amount / 12)), 0));
-        setYearlyCost(Object.values(subscriptions).reduce((prev, curr) => prev + (curr.occurenceId == 0 ? (curr.amount * 12) : curr.amount), 0));
+        setMonthlyCost(Object.values(subscriptions).reduce((prev, curr) => prev + (curr.occurenceId === 0 ? curr.amount : (curr.amount / 12)), 0));
+        setYearlyCost(Object.values(subscriptions).reduce((prev, curr) => prev + (curr.occurenceId === 0 ? (curr.amount * 12) : curr.amount), 0));
         setMappedSubscriptions(
             Object.keys(subscriptions).map((id) => {
                 var subscription = { id, ...subscriptions[id] };
