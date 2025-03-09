@@ -18,6 +18,8 @@ const SubscriptionDetails = () => {
     const dispatch = useDispatch();
     const { subscriptions } = useSelector((state) => state.recurringPayments);
 
+    const [monthlyCost, setMonthlyCost] = useState(0);
+    const [yearlyCost, setYearlyCost] = useState(0);
     const [mappedSubscriptions, setMappedSubscriptions] = useState([]);
     const [isDisplayModal, setIsDisplayModal] = useState(false);
     const [occurence, setOccurence] = useState(0);
@@ -28,6 +30,8 @@ const SubscriptionDetails = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        setMonthlyCost(Object.values(subscriptions).reduce((prev, curr) => prev + (curr.occurenceId == 0 ? curr.amount : (curr.amount / 12)), 0));
+        setYearlyCost(Object.values(subscriptions).reduce((prev, curr) => prev + (curr.occurenceId == 0 ? (curr.amount * 12) : curr.amount), 0));
         setMappedSubscriptions(
             Object.keys(subscriptions).map((id) => {
                 var subscription = { id, ...subscriptions[id] };
@@ -147,6 +151,7 @@ const SubscriptionDetails = () => {
                 setDisplayModal={setIsDisplayModal}
                 handleDelete={handleDelete}
             />
+            <p className="summary">${monthlyCost.toFixed(2)}/month - ${yearlyCost.toFixed(2)}/year</p>
             <Modal
                 isDisplayModal={isDisplayModal}
                 title={labels.addSubscriptionTitle}
@@ -169,6 +174,10 @@ export default SubscriptionDetails;
 const SubscriptionsWrapper = styled.div`
     /* mobile */
     h2 {
+        text-align: center;
+    }
+
+    .summary {
         text-align: center;
     }
 
