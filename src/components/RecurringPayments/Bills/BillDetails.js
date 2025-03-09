@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "../../Auth/AuthContext";
-import { DATEFORMAT } from "../../../resources/constants";
+import { DATEFORMAT, LOCALSTRINGSETTINGS } from "../../../resources/constants";
 import { labels, occurences } from "../../../resources/labels";
 import { GetStringLength } from "../../../utilities/FormatData";
 import { addBill, deleteBill } from "../../../actions/billActions";
@@ -18,23 +18,41 @@ const BillDetails = () => {
     const dispatch = useDispatch();
     const { bills } = useSelector((state) => state.recurringPayments);
 
-    const [total, setTotal] = useState(0);
+    const [monthlyCost, setMonthlyCost] = useState(0);
+    const [yearlyCost, setYearlyCost] = useState(0);
     const [mappedBills, setMappedBills] = useState([]);
     const [isDisplayModal, setIsDisplayModal] = useState(false);
     const [occurence, setOccurence] = useState(0);
     const [bill, setBill] = useState('');
-    const [amount, setAmmount] = useState('');
+    const [amount, setAmount] = useState('');
     const [date, setDate] = useState(moment().format(DATEFORMAT).toString());
     const [error, setError] = useState();
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        setTotal(Object.values(bills).reduce((prev, curr) => prev + curr.amount, 0));
+        setMonthlyCost(Object.values(bills).reduce((prev, curr) => prev + (curr.occurenceId === 0 ? curr.amount : (curr.amount / 12)), 0));
+        setYearlyCost(Object.values(bills).reduce((prev, curr) => prev + (curr.occurenceId === 0 ? (curr.amount * 12) : curr.amount), 0));
+
+        let mapped = Object.keys(bills).map((id) => {
+            let bill = { id, ...bills[id] };
+            bill.occurence = occurences.find(at => at.id === bill.occurenceId)?.value ?? 'Missing Type';
+            bill.displayDate = bill.occurenceId === 0 ? bill.date.split('-')[2] : bill.date.substring(5);
+            bill.displayAmount = `$${bill.amount.toLocaleString("en-US", LOCALSTRINGSETTINGS)}`;
+            return bill;
+        });
+
         setMappedBills(
-            Object.keys(bills).map((id) => {
-                var bill = { id, ...bills[id] };
-                bill.occurence = occurences.find(at => at.id === bill.occurenceId)?.value ?? 'Missing Type';
-                return bill;
+            mapped.sort((a, b) => {
+                if (a.occurenceId !== b.occurenceId) return a.occurenceId - b.occurenceId;
+
+                if (a.id === 1) {
+                    return parseInt(a.date) - parseInt(b.date);
+                }
+
+                const [, aMonth, aDay] = a.date.split('-').map(Number);
+                const [, bMonth, bDay] = b.date.split('-').map(Number);
+
+                return aMonth - bMonth || aDay - bDay;
             })
         );
     }, [bills]);
@@ -79,10 +97,18 @@ const BillDetails = () => {
             const billId = await addBillAsync(user.uid, payload);
             dispatch(addBill({ ...payload, id: billId }));
             setIsDisplayModal(false);
+            clearInput();
         }
         catch (ex) {
             console.log(ex.message);
         }
+    }
+
+    const clearInput = () => {
+        setOccurence(0);
+        setBill('');
+        setAmount('');
+        setDate(moment().format(DATEFORMAT).toString());
     }
 
     const handleDelete = async (billId) => {
@@ -121,7 +147,7 @@ const BillDetails = () => {
             label: labels.billAmount,
             input: <input
                 id='amount'
-                onChange={(e) => setAmmount(e.target.value)}
+                onChange={(e) => setAmount(e.target.value)}
                 type='number'
                 step='0.01'
                 placeholder='$0.00'
@@ -149,7 +175,7 @@ const BillDetails = () => {
                 setDisplayModal={setIsDisplayModal}
                 handleDelete={handleDelete}
             />
-            <p className="summary">Total: ${total.toFixed(2)}</p>
+            <p className="summary">${monthlyCost.toLocaleString("en-US", LOCALSTRINGSETTINGS)}/month - ${yearlyCost.toLocaleString("en-US", LOCALSTRINGSETTINGS)}/year</p>
             <Modal
                 isDisplayModal={isDisplayModal}
                 title={labels.addBillTitle}

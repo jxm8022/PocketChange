@@ -241,8 +241,8 @@ export const labels = {
     billHeaders: [
         { id: 0, value: 'Occurrence', property: 'occurence' },
         { id: 1, value: 'Bill', property: 'name' },
-        { id: 2, value: 'Amount', property: 'amount' },
-        { id: 3, value: 'Date', property: 'date' },
+        { id: 2, value: 'Amount', property: 'displayAmount' },
+        { id: 3, value: 'Date', property: 'displayDate' },
     ],
 
     // Subscriptions
@@ -256,7 +256,7 @@ export const labels = {
     subscriptionHeaders: [
         { id: 0, value: 'Occurrence', property: 'occurence' },
         { id: 1, value: 'Subscription', property: 'name' },
-        { id: 2, value: 'Amount', property: 'amount' },
-        { id: 3, value: 'Date', property: 'date' },
+        { id: 2, value: 'Amount', property: 'displayAmount' },
+        { id: 3, value: 'Date', property: 'displayDate' },
     ],
 };
