@@ -233,8 +233,11 @@ export const labels = {
     // Bills
     bill: 'Bill',
     bills: 'Bills',
+    addBillTitle: 'Add bill',
     addBillButtonLabel: 'Add bill',
     billOccurence: 'Occurence',
+    billAmount: 'Amount',
+    billDate: 'Date',
     billHeaders: [
         { id: 0, value: 'Occurrence', property: 'occurence' },
         { id: 1, value: 'Bill', property: 'name' },
@@ -245,8 +248,11 @@ export const labels = {
     // Subscriptions
     subscription: 'Subscription',
     subscriptions: 'Subscriptions',
+    addSubscriptionTitle: 'Add subscription',
     addSubscriptionButtonLabel: 'Add subscription',
     subscriptionOccurence: 'Occurence',
+    subscriptionAmount: 'Amount',
+    subscriptionDate: 'Date',
     subscriptionHeaders: [
         { id: 0, value: 'Occurrence', property: 'occurence' },
         { id: 1, value: 'Subscription', property: 'name' },
