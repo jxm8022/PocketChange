@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "../../Auth/AuthContext";
-import { DATEFORMAT } from "../../../resources/constants";
+import { DATEFORMAT, LOCALSTRINGSETTINGS } from "../../../resources/constants";
 import { labels, occurences } from "../../../resources/labels";
 import { addSubscriptionAsync, deleteSubscriptionAsync } from "../../../api/subscriptionsAPI";
 import { addSubscription, deleteSubscription } from "../../../actions/subscriptionActions";
@@ -24,7 +24,7 @@ const SubscriptionDetails = () => {
     const [isDisplayModal, setIsDisplayModal] = useState(false);
     const [occurence, setOccurence] = useState(0);
     const [subscription, setSubscription] = useState('');
-    const [amount, setAmmount] = useState('');
+    const [amount, setAmount] = useState('');
     const [date, setDate] = useState(moment().format(DATEFORMAT).toString());
     const [error, setError] = useState();
     const [isLoading, setIsLoading] = useState(false);
@@ -32,11 +32,26 @@ const SubscriptionDetails = () => {
     useEffect(() => {
         setMonthlyCost(Object.values(subscriptions).reduce((prev, curr) => prev + (curr.occurenceId === 0 ? curr.amount : (curr.amount / 12)), 0));
         setYearlyCost(Object.values(subscriptions).reduce((prev, curr) => prev + (curr.occurenceId === 0 ? (curr.amount * 12) : curr.amount), 0));
+        let mapped = Object.keys(subscriptions).map((id) => {
+            var subscription = { id, ...subscriptions[id] };
+            subscription.occurence = occurences.find(at => at.id === subscription.occurenceId)?.value ?? 'Missing Type';
+            subscription.displayDate = subscription.occurenceId === 0 ? subscription.date.split('-')[2] : subscription.date.substring(5);
+            subscription.displayAmount = `$${subscription.amount.toLocaleString("en-US", LOCALSTRINGSETTINGS)}`;
+            return subscription;
+        });
+
         setMappedSubscriptions(
-            Object.keys(subscriptions).map((id) => {
-                var subscription = { id, ...subscriptions[id] };
-                subscription.occurence = occurences.find(at => at.id === subscription.occurenceId)?.value ?? 'Missing Type';
-                return subscription;
+            mapped.sort((a, b) => {
+                if (a.occurenceId !== b.occurenceId) return a.occurenceId - b.occurenceId;
+
+                if (a.id === 1) {
+                    return parseInt(a.date) - parseInt(b.date);
+                }
+
+                const [, aMonth, aDay] = a.date.split('-').map(Number);
+                const [, bMonth, bDay] = b.date.split('-').map(Number);
+
+                return aMonth - bMonth || aDay - bDay;
             })
         );
     }, [subscriptions]);
@@ -81,10 +96,18 @@ const SubscriptionDetails = () => {
             const subscriptionId = await addSubscriptionAsync(user.uid, payload);
             dispatch(addSubscription({ ...payload, id: subscriptionId }));
             setIsDisplayModal(false);
+            clearInput();
         }
         catch (ex) {
             console.log(ex.message);
         }
+    }
+
+    const clearInput = () => {
+        setOccurence(0);
+        setSubscription('');
+        setAmount('');
+        setDate(moment().format(DATEFORMAT).toString());
     }
 
     const handleDelete = async (subscriptionId) => {
@@ -123,7 +146,7 @@ const SubscriptionDetails = () => {
             label: labels.subscriptionAmount,
             input: <input
                 id='amount'
-                onChange={(e) => setAmmount(e.target.value)}
+                onChange={(e) => setAmount(e.target.value)}
                 type='number'
                 step='0.01'
                 placeholder='$0.00'
@@ -151,7 +174,7 @@ const SubscriptionDetails = () => {
                 setDisplayModal={setIsDisplayModal}
                 handleDelete={handleDelete}
             />
-            <p className="summary">${monthlyCost.toFixed(2)}/month - ${yearlyCost.toFixed(2)}/year</p>
+            <p className="summary">${monthlyCost.toLocaleString("en-US", LOCALSTRINGSETTINGS)}/month - ${yearlyCost.toLocaleString("en-US", LOCALSTRINGSETTINGS)}/year</p>
             <Modal
                 isDisplayModal={isDisplayModal}
                 title={labels.addSubscriptionTitle}
