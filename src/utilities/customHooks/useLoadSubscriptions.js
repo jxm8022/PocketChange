@@ -6,7 +6,7 @@ import { getSubscriptionsAsync } from "../../api/subscriptionsAPI";
 
 function useLoadSubscriptions(setIsLoading = () => { }) {
     const { user } = useAuth();
-    const { subscriptions } = useSelector((state) => state.subscription);
+    const { subscriptions } = useSelector((state) => state.recurringPayments);
     const dispatch = useDispatch();
 
     useEffect(() => {

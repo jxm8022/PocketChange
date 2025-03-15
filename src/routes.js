@@ -8,7 +8,7 @@ import Account from './pages/Account';
 import Statistics from './pages/Statistics';
 import MonthOverview from './pages/MonthOverview';
 import AddTransaction from './components/Transaction/AddTransaction';
-import Subscriptions from './pages/Subscriptions';
+import RecurringPayments from './pages/RecurringPayments';
 import { labels } from './resources/labels';
 
 const HomePage = React.lazy(() => import('./pages/Home'));
@@ -88,10 +88,10 @@ const routes = [
     },
     {
         id: 10,
-        path: '/subscriptions',
-        component: <Subscriptions />,
+        path: '/recurringPayments',
+        component: <RecurringPayments />,
         isProtected: true,
-        navBarLabel: labels.subscriptions,
+        navBarLabel: labels.recurringPayments,
         orderId: 2,
     },
 ];

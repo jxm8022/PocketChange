@@ -56,3 +56,8 @@ export const RATIOS = {
 };
 
 export const DAYS = 31;
+
+export const LOCALSTRINGSETTINGS = {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+};

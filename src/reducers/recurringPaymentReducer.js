@@ -1,11 +1,30 @@
 import * as types from '../actions/actionTypes';
 
 const initialState = {
+    bills: {},
     subscriptions: {}
 }
 
-const subscriptionReducer = (state = initialState, action) => {
+const recurringPaymentReducer = (state = initialState, action) => {
     switch (action.type) {
+        /* BILLS */
+        case types.ADD_BILL:
+            let addBill = structuredClone(state);
+            addBill.bills[action.payload.id] = action.payload;
+            return addBill;
+        case types.LOAD_BILLS:
+            let loadBillsState = structuredClone(state);
+            if (!action.payload) {
+                return loadBillsState;
+            }
+
+            loadBillsState.bills = action.payload;
+            return loadBillsState;
+        case types.DELETE_BILL:
+            let deleteBillState = structuredClone(state);
+            delete deleteBillState.bills[action.payload];
+            return deleteBillState;
+        /* SUBSCRIPTIONS */
         case types.ADD_SUBSCRIPTION:
             let addSubscription = structuredClone(state);
             addSubscription.subscriptions[action.payload.id] = action.payload;
@@ -27,4 +46,4 @@ const subscriptionReducer = (state = initialState, action) => {
     }
 }
 
-export default subscriptionReducer;
+export default recurringPaymentReducer;
