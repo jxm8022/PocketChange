@@ -59,7 +59,7 @@ const Graph = (props) => {
                 }
             },
             xaxis: {
-                categories: months.map(month => month.abb),
+                categories: months.map(month => month.value),
                 axisTicks: {
                     show: true,
                     borderType: 'dotted'
