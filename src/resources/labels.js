@@ -64,8 +64,8 @@ export const labels = {
     forgotPassword: 'Forgot password',
 
     // Navigation
-    home: 'Home',
-    monthOverview: 'Month Overview',
+    dashboard: 'Dashboard',
+    transactions: 'Transactions',
     about: 'About',
     account: 'Account',
     logout: 'Logout',

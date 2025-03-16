@@ -32,7 +32,7 @@ const Home = () => {
     return (
         <Template paddingBottom={25}>
             <Loader isLoading={loadCount > 0} />
-            <h1>{labels.home}</h1>
+            <h1>{labels.dashboard}</h1>
             <h2>Summary</h2>
             <Selector
                 label={labels.year}

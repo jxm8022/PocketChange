@@ -23,7 +23,7 @@ const MonthOverview = () => {
     return (
         <Template>
             <Loader isLoading={loadCount > 0} />
-            <h1>{labels.monthOverview}</h1>
+            <h1>{labels.transactions}</h1>
             <MonthSelector />
             <TransactionFilter accountDictionary={accountDictionary} transactions={transactions} />
             <MonthDetails accountDictionary={accountDictionary} accounts={accounts} />
