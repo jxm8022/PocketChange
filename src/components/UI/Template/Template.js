@@ -27,7 +27,7 @@ const Template = (props) => {
             <div className='footer'>
                 <ul>
                     {navRoutes.map((route) => <li key={route.id}>
-                        <p onClick={() => navigate(route.path)}>{route.navBarLabel}</p>
+                        <p onClick={() => { window.scrollTo(0, 0); navigate(route.path); }}>{route.navBarLabel}</p>
                     </li>)}
                 </ul>
             </div>

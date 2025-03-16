@@ -111,16 +111,19 @@ const SubscriptionDetails = () => {
     }
 
     const handleDelete = async (subscriptionId) => {
-        setIsLoading(true);
-        try {
-            await deleteSubscriptionAsync(user.uid, subscriptionId);
-            dispatch(deleteSubscription(subscriptionId));
-        }
-        catch (ex) {
-            console.log(ex.message)
-        }
-        finally {
-            setIsLoading(false);
+        const response = window.confirm(`Confirm deletion`);
+        if (response) {
+            setIsLoading(true);
+            try {
+                await deleteSubscriptionAsync(user.uid, subscriptionId);
+                dispatch(deleteSubscription(subscriptionId));
+            }
+            catch (ex) {
+                console.log(ex.message)
+            }
+            finally {
+                setIsLoading(false);
+            }
         }
     }
 
