@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { labels } from "../resources/labels";
-import Loader from "../components/UI/Loader/Loader";
-import Template from "../components/UI/Template/Template";
+import Loader from "../components/Common/Loader";
+import Template from "../components/Common/Template";
 import useLoadSubscriptions from "../utilities/customHooks/useLoadSubscriptions";
 import RecurringPaymentDetails from "../components/RecurringPayments/RecurringPaymentDetails";
 import useLoadBills from "../utilities/customHooks/useLoadBills";

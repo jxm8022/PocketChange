@@ -9,7 +9,7 @@ import { addBillAsync, deleteBillAsync } from "../../../api/billsAPI";
 import moment from "moment";
 import styled from "styled-components";
 import Table from "../../Common/Table";
-import Loader from "../../UI/Loader/Loader";
+import Loader from "../../Common/Loader";
 import Modal from "../../Common/Modal";
 import Form from "../../Common/Form";
 
@@ -112,16 +112,19 @@ const BillDetails = () => {
     }
 
     const handleDelete = async (billId) => {
-        setIsLoading(true);
-        try {
-            await deleteBillAsync(user.uid, billId);
-            dispatch(deleteBill(billId));
-        }
-        catch (ex) {
-            console.log(ex.message)
-        }
-        finally {
-            setIsLoading(false);
+        const response = window.confirm(`Confirm deletion`);
+        if (response) {
+            setIsLoading(true);
+            try {
+                await deleteBillAsync(user.uid, billId);
+                dispatch(deleteBill(billId));
+            }
+            catch (ex) {
+                console.log(ex.message)
+            }
+            finally {
+                setIsLoading(false);
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 import { labels } from "../resources/labels";
+import Template from "../components/Common/Template";
 import versionHistory from "../assets/versionHistory";
-import Template from "../components/UI/Template/Template";
 
 const Version = () => {
     const getVersionInfo = (info) => {

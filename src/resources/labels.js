@@ -64,8 +64,8 @@ export const labels = {
     forgotPassword: 'Forgot password',
 
     // Navigation
-    home: 'Home',
-    monthOverview: 'Month Overview',
+    dashboard: 'Dashboard',
+    transactions: 'Transactions',
     about: 'About',
     account: 'Account',
     logout: 'Logout',
@@ -197,7 +197,7 @@ export const labels = {
         'Name',
         'Amount'
     ],
-    deleteData: 'Delete data',
+    deleteData: 'Delete all data',
     addAccountTitle: 'Add Account',
     addAccountButtonLabel: 'Add account',
     accountTableHeader: 'Accounts',

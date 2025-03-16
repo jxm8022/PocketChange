@@ -1,5 +1,5 @@
 import AuthForm from "../components/Auth/AuthForm";
-import Template from "../components/UI/Template/Template";
+import Template from "../components/Common/Template";
 
 const Auth = () => {
     return (

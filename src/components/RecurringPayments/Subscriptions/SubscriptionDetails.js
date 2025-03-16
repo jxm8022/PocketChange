@@ -9,7 +9,7 @@ import { GetStringLength } from "../../../utilities/FormatData";
 import moment from "moment";
 import styled from "styled-components";
 import Table from "../../Common/Table";
-import Loader from "../../UI/Loader/Loader";
+import Loader from "../../Common/Loader";
 import Modal from "../../Common/Modal";
 import Form from "../../Common/Form";
 
@@ -111,16 +111,19 @@ const SubscriptionDetails = () => {
     }
 
     const handleDelete = async (subscriptionId) => {
-        setIsLoading(true);
-        try {
-            await deleteSubscriptionAsync(user.uid, subscriptionId);
-            dispatch(deleteSubscription(subscriptionId));
-        }
-        catch (ex) {
-            console.log(ex.message)
-        }
-        finally {
-            setIsLoading(false);
+        const response = window.confirm(`Confirm deletion`);
+        if (response) {
+            setIsLoading(true);
+            try {
+                await deleteSubscriptionAsync(user.uid, subscriptionId);
+                dispatch(deleteSubscription(subscriptionId));
+            }
+            catch (ex) {
+                console.log(ex.message)
+            }
+            finally {
+                setIsLoading(false);
+            }
         }
     }
 
