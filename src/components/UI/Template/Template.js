@@ -23,7 +23,6 @@ const Template = (props) => {
             <Notification />
             <div className='children' style={{ paddingBottom: props.paddingBottom }}>
                 {props.children}
-                <span className='version' onClick={() => navigate('/version')}>v{latestVersion}</span>
             </div>
             <div className='footer'>
                 <ul>
