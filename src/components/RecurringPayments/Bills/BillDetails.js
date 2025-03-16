@@ -9,7 +9,7 @@ import { addBillAsync, deleteBillAsync } from "../../../api/billsAPI";
 import moment from "moment";
 import styled from "styled-components";
 import Table from "../../Common/Table";
-import Loader from "../../UI/Loader/Loader";
+import Loader from "../../Common/Loader";
 import Modal from "../../Common/Modal";
 import Form from "../../Common/Form";
 

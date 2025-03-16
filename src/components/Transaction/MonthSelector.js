@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { months, labels } from "../../../resources/labels";
-import useDefaultSearchParams from "../../../utilities/customHooks/useDefaultSearchParams";
-import Selector from "../../UI/Selector/Selector";
+import { months, labels } from "../../resources/labels";
+import useDefaultSearchParams from "../../utilities/customHooks/useDefaultSearchParams";
+import Selector from "../Common/Selector";
 import styled from "styled-components";
 
 const MonthSelector = (props) => {

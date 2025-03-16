@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import Template from "../components/UI/Template/Template";
 import { labels } from "../resources/labels";
+import Template from "../components/Common/Template";
 
 const LoggedOut = () => {
     return (
@@ -25,7 +25,7 @@ const NotFound = () => {
 
     let displayComponent = <WhatThe />
 
-    if (currentPath === 'yearOverview' || currentPath === 'addTransaction' || currentPath === 'monthOverview') {
+    if (currentPath === 'dashboard' || currentPath === 'addTransaction' || currentPath === 'monthOverview') {
         displayComponent = <LoggedOut />
     }
 

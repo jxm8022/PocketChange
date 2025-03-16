@@ -3,12 +3,11 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { labels } from '../../resources/labels';
-import { setMessage } from '../../actions/pageActions';
 import { loginUser, signUpUser, resetPassword } from '../../api/authAPI';
 
 import showHidePassword from '../../assets/images/auth/icons8-eye-90.png';
 import styled from "styled-components";
-import Loader from '../UI/Loader/Loader';
+import Loader from '../Common/Loader';
 
 const AuthForm = () => {
     const { isLoggedIn } = useAuth();
@@ -23,7 +22,7 @@ const AuthForm = () => {
 
     useEffect(() => {
         if (isLoggedIn) {
-            navigate("/yearOverview");
+            navigate("/dashboard");
         }
     }, [isLoggedIn, navigate]);
 
@@ -46,7 +45,7 @@ const AuthForm = () => {
             } else {
                 await signUpUser(email, password);
             }
-            navigate("/yearOverview");
+            navigate("/dashboard");
         }
         catch (ex) {
             console.log(ex.message)
@@ -65,7 +64,6 @@ const AuthForm = () => {
 
         try {
             await resetPassword(email);
-            dispatch(setMessage(`Instructions sent to ${email}`));
         }
         catch (ex) {
             console.log(ex.message)

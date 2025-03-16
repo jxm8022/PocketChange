@@ -5,8 +5,7 @@ import Auth from './pages/Auth';
 import About from './pages/About';
 import Version from './pages/Version';
 import Account from './pages/Account';
-import Statistics from './pages/Statistics';
-import MonthOverview from './pages/MonthOverview';
+import Transactions from './pages/Transactions';
 import AddTransaction from './components/Transaction/AddTransaction';
 import RecurringPayments from './pages/RecurringPayments';
 import { labels } from './resources/labels';
@@ -18,7 +17,7 @@ import DarkRecords from './assets/images/nav/dark-records-ios-17-glyph/records-3
 import LightRepeat from './assets/images/nav/light-repeat-ios-17-glyph/repeat-30.png';
 import DarkRepeat from './assets/images/nav/dark-repeat-ios-17-glyph/repeat-30.png';
 
-const HomePage = React.lazy(() => import('./pages/Home'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard'));
 const NotFoundPage = React.lazy(() => import('./pages/NotFound'));
 
 export const sortRoute = (a, b) => {
@@ -35,8 +34,8 @@ const routes = [
     },
     {
         id: 1,
-        path: '/yearOverview',
-        component: <HomePage />,
+        path: '/dashboard',
+        component: <Dashboard />,
         isProtected: true,
         navBarLabel: labels.dashboard,
         orderId: 0,
@@ -48,7 +47,7 @@ const routes = [
     {
         id: 2,
         path: '/transactions',
-        component: <MonthOverview />,
+        component: <Transactions />,
         isProtected: true,
         navBarLabel: labels.transactions,
         orderId: 1,
@@ -62,14 +61,6 @@ const routes = [
         path: '/transactions/addTransaction',
         component: <AddTransaction />,
         isProtected: true
-    },
-    {
-        id: 4,
-        path: '/statistics',
-        component: <Statistics />,
-        isProtected: true,
-        navBarLabel: labels.statistics,
-        isDisplayed: false
     },
     {
         id: 5,

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { filterTransactions } from "../../../actions/transactionActions";
+import { filterTransactions } from "../../actions/transactionActions";
 import styled from "styled-components";
-import Selector from "../../UI/Selector/Selector";
+import Selector from "../Common/Selector";
 
 const TransactionFilter = ({ accountDictionary, transactions }) => {
     const [accountFilterList, setAccountFilterList] = useState([]);

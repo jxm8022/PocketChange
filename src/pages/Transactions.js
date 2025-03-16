@@ -1,15 +1,15 @@
 import { useCallback, useState } from "react";
 import { labels } from "../resources/labels";
-import MonthDetails from "../components/DisplayMonth/MonthDetails/MonthDetails";
-import MonthSelector from "../components/DisplayMonth/MonthSelector/MonthSelector";
-import Template from "../components/UI/Template/Template";
-import TransactionFilter from "../components/DisplayMonth/TransactionFilter/TransactionFilter";
+import Loader from "../components/Common/Loader";
+import Template from "../components/Common/Template";
+import MonthSelector from "../components/Transaction/MonthSelector";
 import useLoadAccounts from "../utilities/customHooks/useLoadAccounts";
+import TransactionFilter from "../components/Transaction/TransactionFilter";
+import TransactionDetails from "../components/Transaction/TransactionDetails";
 import useLoadTransactions from "../utilities/customHooks/useLoadTransactions";
-import Loader from "../components/UI/Loader/Loader";
 import useDefaultSearchParams from "../utilities/customHooks/useDefaultSearchParams";
 
-const MonthOverview = () => {
+const Transactions = () => {
     const [loadCount, setLoadingCount] = useState(0);
 
     const updateLoadingState = useCallback((isLoading) => {
@@ -26,10 +26,10 @@ const MonthOverview = () => {
             <h1>{labels.transactions}</h1>
             <MonthSelector />
             <TransactionFilter accountDictionary={accountDictionary} transactions={transactions} />
-            <MonthDetails accountDictionary={accountDictionary} accounts={accounts} />
+            <TransactionDetails accountDictionary={accountDictionary} accounts={accounts} />
             <a href='#top' className="scroll-top">{labels.top}</a>
         </Template>
     );
 }
 
-export default MonthOverview;
+export default Transactions;

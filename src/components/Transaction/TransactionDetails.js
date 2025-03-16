@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { useAuth } from '../../Auth/AuthContext';
+import { useAuth } from '../Auth/AuthContext';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTransactionAsync } from '../../../api/transactionAPI';
-import { deleteTransaction } from '../../../actions/transactionActions';
-import { labels, transactionCategories } from '../../../resources/labels';
-import Loader from '../../UI/Loader/Loader';
+import { deleteTransactionAsync } from '../../api/transactionAPI';
+import { deleteTransaction } from '../../actions/transactionActions';
+import { labels, transactionCategories } from '../../resources/labels';
+import Loader from '../Common/Loader';
 import styled from "styled-components";
 
-const MonthDetails = ({ accountDictionary }) => {
+const TransactionDetails = ({ accountDictionary }) => {
     const { user } = useAuth();
     const { filteredTransactions } = useSelector((state) => state.transaction);
     const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +33,7 @@ const MonthDetails = ({ accountDictionary }) => {
     }
 
     return (
-        <MonthDetailsWrapper>
+        <TransactionDetailsWrapper>
             <Loader isLoading={isLoading} />
             <table className="table">
                 <thead>
@@ -53,13 +53,13 @@ const MonthDetails = ({ accountDictionary }) => {
                     )) : <tr style={{ height: '48px' }}><td> </td><td> </td><td> </td><td> </td><td> </td></tr>}
                 </tbody>
             </table>
-        </MonthDetailsWrapper>
+        </TransactionDetailsWrapper>
     );
 }
 
-export default MonthDetails;
+export default TransactionDetails;
 
-const MonthDetailsWrapper = styled.div`
+const TransactionDetailsWrapper = styled.div`
     /* mobile */
     .table {
         border-collapse: collapse;

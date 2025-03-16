@@ -1,15 +1,15 @@
 import { useCallback, useState } from "react";
 import { labels } from "../resources/labels";
-import Loader from "../components/UI/Loader/Loader";
+import Loader from "../components/Common/Loader";
 import NetSummary from "../components/Summary/NetSummary";
-import Selector from "../components/UI/Selector/Selector";
-import Template from "../components/UI/Template/Template";
+import Selector from "../components/Common/Selector";
+import Template from "../components/Common/Template";
 import AccountSummary from "../components/Summary/AccountSummary";
 import useLoadAccounts from "../utilities/customHooks/useLoadAccounts";
 import useDefaultSearchParams from "../utilities/customHooks/useDefaultSearchParams";
 import useLoadYearStatistics from "../utilities/customHooks/useLoadYearStatistics";
 
-const Home = () => {
+const Dashboard = () => {
     const [loadCount, setLoadingCount] = useState(0);
 
     const yearOptions = Array.from({ length: 11 }, (_, i) => {
@@ -45,4 +45,4 @@ const Home = () => {
     );
 }
 
-export default Home;
+export default Dashboard;

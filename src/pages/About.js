@@ -1,7 +1,7 @@
 import { labels } from "../resources/labels";
 import DeveloperInfo from "../components/DeveloperInfo/DeveloperInfo";
 import SiteInfo from "../components/SiteInfo/SiteInfo";
-import Template from "../components/UI/Template/Template";
+import Template from "../components/Common/Template";
 
 const About = () => {
     return (

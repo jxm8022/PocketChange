@@ -9,7 +9,7 @@ import { GetStringLength } from "../../../utilities/FormatData";
 import moment from "moment";
 import styled from "styled-components";
 import Table from "../../Common/Table";
-import Loader from "../../UI/Loader/Loader";
+import Loader from "../../Common/Loader";
 import Modal from "../../Common/Modal";
 import Form from "../../Common/Form";
 

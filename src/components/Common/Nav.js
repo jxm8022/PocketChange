@@ -38,7 +38,7 @@ const Nav = () => {
 
     return (
         <NavWrapper>
-            <h3 onClick={() => navigate('/yearOverview')}>{labels.websiteName}</h3>
+            <h3 onClick={() => navigate('/dashboard')}>{labels.websiteName}</h3>
             <ul>
                 {navRoutes.map((route) => <li key={route.id}>
                     <NavLink

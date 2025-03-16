@@ -2,12 +2,11 @@ import { useState } from "react";
 import { logoutUser } from "../api/authAPI";
 import { labels } from "../resources/labels";
 import { useAuth } from "../components/Auth/AuthContext";
-import Loader from "../components/UI/Loader/Loader";
+import Loader from "../components/Common/Loader";
 import Accounts from "../components/Account/Accounts";
-import Template from "../components/UI/Template/Template";
+import Template from "../components/Common/Template";
 import DataManagement from "../components/Account/DataManagement";
 import useLoadAccounts from "../utilities/customHooks/useLoadAccounts";
-import UpdatePassword from "../components/Auth/UpdatePassword/UpdatePassword";
 
 const Account = () => {
     const { isLoggedIn } = useAuth();
@@ -24,7 +23,6 @@ const Account = () => {
             <Loader isLoading={isLoading} />
             <h1>{labels.account}</h1>
             <Accounts />
-            <UpdatePassword />
             <DataManagement />
             {isLoggedIn && <button onClick={handleLogout}>Logout</button>}
         </Template>

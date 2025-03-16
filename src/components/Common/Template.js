@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import versionHistory from "../../../assets/versionHistory";
-import Notification from "../Notification/Notification";
+import Nav from "./Nav";
+import routes from "../../routes";
 import styled from "styled-components";
-import Nav from "../../Common/Nav";
-import routes from "../../../routes";
 
 const Template = (props) => {
     const navigate = useNavigate();
     const [navRoutes, setNavRoutes] = useState([]);
-    const latestVersion = versionHistory[versionHistory.length - 1].version;
 
     useEffect(() => {
         let filteredRoutes = routes.filter(route => route.navBarLabel && route.isFooter);
@@ -20,7 +17,6 @@ const Template = (props) => {
     return (
         <TemplateWrapper>
             <Nav />
-            <Notification />
             <div className='children' style={{ paddingBottom: props.paddingBottom }}>
                 {props.children}
             </div>
