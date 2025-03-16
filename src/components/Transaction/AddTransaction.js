@@ -11,8 +11,8 @@ import useLoadAccounts from '../../utilities/customHooks/useLoadAccounts';
 import useLoadDictionary from '../../utilities/customHooks/useLoadDictionary';
 import moment from 'moment/moment';
 import styled from "styled-components";
-import Loader from '../UI/Loader/Loader';
-import Template from '../UI/Template/Template';
+import Loader from '../Common/Loader';
+import Template from '../Common/Template';
 
 const AddTransaction = () => {
     const dispatch = useDispatch();

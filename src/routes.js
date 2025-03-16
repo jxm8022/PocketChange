@@ -5,13 +5,19 @@ import Auth from './pages/Auth';
 import About from './pages/About';
 import Version from './pages/Version';
 import Account from './pages/Account';
-import Statistics from './pages/Statistics';
-import MonthOverview from './pages/MonthOverview';
+import Transactions from './pages/Transactions';
 import AddTransaction from './components/Transaction/AddTransaction';
 import RecurringPayments from './pages/RecurringPayments';
 import { labels } from './resources/labels';
 
-const HomePage = React.lazy(() => import('./pages/Home'));
+import LightDashboard from './assets/images/nav/light-dashboard-ios-17-glyph/dashboard-30.png';
+import DarkDashboard from './assets/images/nav/dark-dashboard-ios-17-glyph/dashboard-30.png';
+import LightRecords from './assets/images/nav/light-records-ios-17-glyph/records-30.png';
+import DarkRecords from './assets/images/nav/dark-records-ios-17-glyph/records-30.png';
+import LightRepeat from './assets/images/nav/light-repeat-ios-17-glyph/repeat-30.png';
+import DarkRepeat from './assets/images/nav/dark-repeat-ios-17-glyph/repeat-30.png';
+
+const Dashboard = React.lazy(() => import('./pages/Dashboard'));
 const NotFoundPage = React.lazy(() => import('./pages/NotFound'));
 
 export const sortRoute = (a, b) => {
@@ -28,31 +34,33 @@ const routes = [
     },
     {
         id: 1,
-        path: '/yearOverview',
-        component: <HomePage />,
+        path: '/dashboard',
+        component: <Dashboard />,
         isProtected: true,
+        navBarLabel: labels.dashboard,
+        orderId: 0,
+        image: {
+            light: LightDashboard,
+            dark: DarkDashboard,
+        }
     },
     {
         id: 2,
-        path: '/monthOverview',
-        component: <MonthOverview />,
+        path: '/transactions',
+        component: <Transactions />,
         isProtected: true,
-        navBarLabel: labels.monthOverview,
-        orderId: 0,
+        navBarLabel: labels.transactions,
+        orderId: 1,
+        image: {
+            light: LightRecords,
+            dark: DarkRecords,
+        }
     },
     {
         id: 3,
-        path: '/monthOverview/addTransaction',
+        path: '/transactions/addTransaction',
         component: <AddTransaction />,
         isProtected: true
-    },
-    {
-        id: 4,
-        path: '/statistics',
-        component: <Statistics />,
-        isProtected: true,
-        navBarLabel: labels.statistics,
-        isDisplayed: false
     },
     {
         id: 5,
@@ -60,26 +68,30 @@ const routes = [
         component: <Account />,
         isProtected: true,
         navBarLabel: labels.account,
-        orderId: 1,
+        orderId: 3,
+        isDisplayed: false
     },
     {
         id: 6,
         path: '/about',
         component: <About />,
         navBarLabel: labels.about,
-        orderId: 3,
+        isDisplayed: false,
+        isFooter: true,
     },
     {
         id: 7,
         path: '/auth',
         component: <Auth />,
-        navBarLabel: labels.logout,
-        orderId: 999,
+        isDisplayed: false
     },
     {
         id: 8,
         path: '/version',
-        component: <Version />
+        component: <Version />,
+        navBarLabel: labels.versionHistory,
+        isDisplayed: false,
+        isFooter: true,
     },
     {
         id: 9,
@@ -93,6 +105,10 @@ const routes = [
         isProtected: true,
         navBarLabel: labels.recurringPayments,
         orderId: 2,
+        image: {
+            light: LightRepeat,
+            dark: DarkRepeat,
+        }
     },
 ];
 
