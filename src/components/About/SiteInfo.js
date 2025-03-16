@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import { labels } from '../../resources/labels';
 import './SiteInfo.css';
 
