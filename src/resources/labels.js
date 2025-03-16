@@ -197,7 +197,7 @@ export const labels = {
         'Name',
         'Amount'
     ],
-    deleteData: 'Delete data',
+    deleteData: 'Delete all data',
     addAccountTitle: 'Add Account',
     addAccountButtonLabel: 'Add account',
     accountTableHeader: 'Accounts',

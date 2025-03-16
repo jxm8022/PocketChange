@@ -30,7 +30,7 @@ const Dashboard = () => {
     }
 
     return (
-        <Template paddingBottom={25}>
+        <Template>
             <Loader isLoading={loadCount > 0} />
             <h1>{labels.dashboard}</h1>
             <h2>Summary</h2>

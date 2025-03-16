@@ -1,6 +1,5 @@
 import { useAuth } from './AuthContext';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { labels } from '../../resources/labels';
 import { loginUser, signUpUser, resetPassword } from '../../api/authAPI';
@@ -17,7 +16,6 @@ const AuthForm = () => {
     const [isEmailValid, setIsEmailValid] = useState(true);
     const [isLogin, setIsLogin] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -83,7 +81,7 @@ const AuthForm = () => {
     };
 
     return (
-        <AuthWrapper>
+        <AuthFormWrapper>
             <Loader isLoading={isLoading} />
             <h2>{isLogin ? labels.login : labels.signUp}</h2>
             <form onSubmit={loginAsync}>
@@ -124,13 +122,13 @@ const AuthForm = () => {
                 </div>
             </form>
             <button onClick={sendEmail} className='forgotPassword'>{labels.forgotPassword}</button>
-        </AuthWrapper>
+        </AuthFormWrapper>
     );
 };
 
 export default AuthForm;
 
-const AuthWrapper = styled.div`
+const AuthFormWrapper = styled.div`
     /* mobile */
     width: 75%;
     border-radius: 80px;

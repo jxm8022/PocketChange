@@ -12,7 +12,7 @@ import Table from "../Common/Table";
 import Modal from "../Common/Modal";
 import Form from "../Common/Form";
 
-const Accounts = () => {
+const AccountDetails = () => {
     const { user } = useAuth();
     const dispatch = useDispatch();
     const { accounts } = useSelector((state) => state.accounts);
@@ -121,7 +121,7 @@ const Accounts = () => {
     ];
 
     return (
-        <AccountsWrapper>
+        <AccountDetailsWrapper>
             <Table
                 headerLabels={labels.accountsHeaders}
                 data={mappedAccounts}
@@ -141,13 +141,13 @@ const Accounts = () => {
                     setError={setError}
                 />
             </Modal>
-        </AccountsWrapper>
+        </AccountDetailsWrapper>
     );
 }
 
-export default Accounts;
+export default AccountDetails;
 
-const AccountsWrapper = styled.div`
+const AccountDetailsWrapper = styled.div`
     /* mobile */
 
     /* tablets */

@@ -17,7 +17,7 @@ const Template = (props) => {
     return (
         <TemplateWrapper>
             <Nav />
-            <div className='children' style={{ paddingBottom: props.paddingBottom }}>
+            <div className='children'>
                 {props.children}
             </div>
             <div className='footer'>
@@ -44,6 +44,7 @@ const TemplateWrapper = styled.div`
         flex-grow: 1;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         font-size: calc(10px + 2vmin);
         font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     }
