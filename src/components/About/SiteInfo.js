@@ -77,12 +77,11 @@ const Definitions = () => {
 }
 
 const HowTo = () => {
-    const { currentMonth, currentYear } = useSelector((state) => state.transaction);
     return (
         <>
             <h2 id='howto'>{labels.howTo}</h2>
             <p className='about-body'>
-                Based off of your personal bank records, <a href={`./monthOverview/addTransaction?month=${currentMonth}&year=${currentYear}`} className='inline-anchor'>add a transaction</a> when a payment has been finalized on your account.
+                Based off of your personal bank records, add a transaction when a payment has been finalized on your account.
                 The transaction type determines how your budget is calculated. For pending transactions, they have their own types, <b>pTransaction</b> and <b>pIncome</b>.
             </p>
         </>
@@ -90,7 +89,6 @@ const HowTo = () => {
 }
 
 const SiteInfo = () => {
-    const { currentMonth, currentYear } = useSelector((state) => state.transaction);
     return (
         <>
             <ul className='page-references'>
@@ -98,11 +96,6 @@ const SiteInfo = () => {
                 <li className='middle'><a href='#developer' className='inline-anchor'>{labels.aboutDeveloper}</a></li>
                 <li><a href='#definitions' className='inline-anchor'>{labels.definitions}</a></li>
             </ul >
-            <p className='about-body'>
-                The <a href='.' className='inline-anchor'>bar chart</a> displays the net information for each month in a given year.
-                The <a href={`./monthOverview?month=${currentMonth}&year=${currentYear}`} className='inline-anchor'>month overview</a> shows how you are doing in a given month.
-                The month overview has <b>Potential Net</b>, <b>Net</b>, <b>Projected Net</b>, and a table with corresponding transactions.
-            </p>
             <p className='about-body'>
                 This website uses two main budgeting strategies. The first strategy is the <b>50/30/20</b> budget. The second strategy is loosely based on the <b>Zero-Based Budget</b>, <b>Net-Based Budget</b>.
             </p>
