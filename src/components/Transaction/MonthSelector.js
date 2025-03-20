@@ -20,7 +20,7 @@ const MonthSelector = (props) => {
     }, [searchParams]);
 
     const createTransaction = () => {
-        navigate(`/monthOverview/addTransaction?${searchParams.toString()}`);
+        navigate(`/transactions/addTransaction?${searchParams.toString()}`);
     }
 
     const onMonthChange = (e) => {

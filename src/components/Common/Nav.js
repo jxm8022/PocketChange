@@ -112,6 +112,9 @@ const NavWrapper = styled.div`
 
     /* tablets */
     @media only screen and (min-width: 600px) {
+        h3 {
+            cursor: pointer;
+        }
     }
 
     /* desktop */
