@@ -11,5 +11,10 @@ export const CleanFloat = (inputFloat) => {
 }
 
 export const FloatString = (inputFloat) => {
+    if (!inputFloat) {
+        let zero = 0;
+        return zero.toFixed(2);
+    }
+
     return CleanFloat(inputFloat).toFixed(2);
 }
