@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { CREDITACCOUNTTYPES } from "../../resources/constants";
+import { FloatString } from "../../utilities/FormatData";
 
 const AccountSummary = (props) => {
     const navigate = useNavigate();
@@ -50,7 +51,7 @@ const AccountSummary = (props) => {
         return <div key={accountId} className="accountWrapper">
             <p className="accountHeader">{account.name}</p>
             <hr className="accountSeparator" />
-            <p className="accountBody">${account.currentBalance.toFixed(2)}</p>
+            <p className="accountBody">${FloatString(account.currentBalance)}</p>
         </div>;
     }
 
