@@ -63,7 +63,7 @@ const TransactionDetailsWrapper = styled.div`
     /* mobile */
     .table {
         border-collapse: collapse;
-        margin: 20px 0px 40px 0px;
+        margin: 20px;
     }
 
     .table th,

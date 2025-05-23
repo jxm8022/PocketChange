@@ -8,6 +8,7 @@ import TransactionFilter from "../components/Transaction/TransactionFilter";
 import TransactionDetails from "../components/Transaction/TransactionDetails";
 import useLoadTransactions from "../utilities/customHooks/useLoadTransactions";
 import useDefaultSearchParams from "../utilities/customHooks/useDefaultSearchParams";
+import MonthSummary from "../components/Summary/MonthSummary";
 
 const Transactions = () => {
     const [loadCount, setLoadingCount] = useState(0);
@@ -27,6 +28,7 @@ const Transactions = () => {
             <MonthSelector />
             <TransactionFilter accountDictionary={accountDictionary} transactions={transactions} />
             <TransactionDetails accountDictionary={accountDictionary} accounts={accounts} />
+            <MonthSummary />
             <a href='#top' className="scroll-top">{labels.top}</a>
         </Template>
     );
