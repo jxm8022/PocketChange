@@ -44,15 +44,16 @@ const BillDetails = () => {
         setMappedBills(
             mapped.sort((a, b) => {
                 if (a.occurenceId !== b.occurenceId) return a.occurenceId - b.occurenceId;
-
-                if (a.id === 1) {
-                    return parseInt(a.date) - parseInt(b.date);
+            }).sort((a, b) => {
+                if (a.occurenceId === 0 && b.occurenceId === 0) {
+                    return parseInt(a.displayDate) - parseInt(b.displayDate);
                 }
-
-                const [, aMonth, aDay] = a.date.split('-').map(Number);
-                const [, bMonth, bDay] = b.date.split('-').map(Number);
-
-                return aMonth - bMonth || aDay - bDay;
+            }).sort((a, b) => {
+                 if (a.occurenceId === 1 && b.occurenceId === 1) {
+                    const [, aMonth, aDay] = a.date.split('-').map(Number);
+                    const [, bMonth, bDay] = b.date.split('-').map(Number);
+                    return aMonth - bMonth || aDay - bDay;
+                }
             })
         );
     }, [bills]);
