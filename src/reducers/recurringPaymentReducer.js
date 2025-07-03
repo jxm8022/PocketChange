@@ -41,6 +41,8 @@ const recurringPaymentReducer = (state = initialState, action) => {
             let deleteSubscriptionState = structuredClone(state);
             delete deleteSubscriptionState.subscriptions[action.payload];
             return deleteSubscriptionState;
+        case types.LOGOUT:
+            return initialState;
         default:
             return state;
     }
